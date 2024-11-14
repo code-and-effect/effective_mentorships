@@ -1,0 +1,15 @@
+en:
+  effective_mentorships:
+    name: 'Mentorship Program'
+    acronym: 'Mentorships'
+    mentor: 'Mentor'
+    mentee: 'Mentee'
+
+  activerecord:
+    models:
+      # Application namespace
+      mentorship_group: 'Mentorship Group'
+      mentorship_registration: 'Mentorship Registration'
+
+      # Effective namespace
+      effective/mentorship_cycle: 'Mentorship Cycle'

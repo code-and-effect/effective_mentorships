@@ -1,0 +1,8 @@
+= tabs do
+  = tab(Effective::MentorshipCycle) do
+    = render 'admin/mentorship_cycles/form_mentorship_cycle', mentorship_cycle: mentorship_cycle
+
+  - if mentorship_cycle.persisted?
+    - if mentorship_cycle.respond_to?(:logs_datatable)
+      = tab 'Logs' do
+        = render_inline_datatable(mentorship_cycle.logs_datatable)
