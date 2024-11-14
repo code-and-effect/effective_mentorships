@@ -37,6 +37,7 @@ jobs:
       - run:
           name: Install Bundle
           command: |
+            bundle config set force_ruby_platform true
             bundle install --jobs=4 --retry=3
 
       - save_cache:
