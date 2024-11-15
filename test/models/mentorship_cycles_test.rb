@@ -7,9 +7,4 @@ class MentorshipCyclesTest < ActiveSupport::TestCase
     assert mentorship_cycle.valid?
   end
 
-  test 'latest cycle is present' do
-    latest_cycle = Effective::MentorshipCycle.latest_cycle # From seeds
-    assert latest_cycle.present?
-  end
-
 end

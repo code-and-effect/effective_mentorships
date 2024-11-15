@@ -1,0 +1,12 @@
+- mentorship_cycle = mentorship_registration.mentorship_cycle
+- raise('expected a mentorship cycle') unless mentorship_cycle.present?
+
+- url = (mentorship_registration.persisted? ? effective_mentorships.mentorship_cycle_mentorship_registration_path(mentorship_cycle, mentorship_registration) : effective_mentorships.mentorship_cycle_mentorship_registrations_path(mentorship_cycle, mentorship_registration))
+
+- if mentorship_cycle.rich_text_registration_content.present?
+  = card do
+    = mentorship_cycle.rich_text_registration_content
+
+= effective_form_with(model: mentorship_registration, url: url) do |f|
+  = render('effective/mentorship_registrations/fields', f: f)
+  = f.submit

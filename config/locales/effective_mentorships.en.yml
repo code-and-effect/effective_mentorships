@@ -8,8 +8,8 @@ en:
   activerecord:
     models:
       # Application namespace
-      mentorship_group: 'Mentorship Group'
-      mentorship_registration: 'Mentorship Registration'
+      app/mentorship_group: 'Mentorship group'
+      app/mentorship_registration: 'Mentorship registration'
 
       # Effective namespace
-      effective/mentorship_cycle: 'Mentorship Cycle'
+      effective/mentorship_cycle: 'Mentorship cycle'
