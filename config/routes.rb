@@ -4,6 +4,9 @@ end
 
 EffectiveMentorships::Engine.routes.draw do
   scope module: 'effective' do
+    resources :mentorship_cycles, only: [] do
+      resources :mentorship_registrations, except: [:index]
+    end
   end
 
   namespace :admin do

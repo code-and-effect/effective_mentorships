@@ -22,6 +22,8 @@ module EffectiveMentorshipsRegistration
   end
 
   included do
+    attr_accessor :current_user
+
     log_changes if respond_to?(:log_changes)
     acts_as_tokened
 
@@ -45,6 +47,10 @@ module EffectiveMentorshipsRegistration
 
     scope :deep, -> { includes(:rich_texts, :user, :mentorship_cycle) }
     scope :sorted, -> { order(:id) }
+
+    before_validation do
+      self.user ||= current_user
+    end
 
     # User
     validates :user_id, uniqueness: { scope: [:mentorship_cycle_id] }

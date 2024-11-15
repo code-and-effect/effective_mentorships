@@ -27,27 +27,32 @@ module EffectiveMentorshipsUser
     scope :deep_effective_mentorships_user, -> { all }
   end
 
+  # Used for the dashboard datatables
+  def registrable_mentorship_cycles
+    Effective::MentorshipCycle.registrable
+  end
+
   # Find
   def mentorship_group(mentorship_cycle:)
-    raise('expected an MentorshipCycle') unless mentorship_cycle.class.respond_to?(:effective_mentorships_mentorship_cycle?)
+    raise('expected an MentorshipCycle') unless mentorship_cycle.class.respond_to?(:effective_mentorships_cycle?)
     mentorship_groups.find { |mentorship_group| mentorship_group.mentorship_cycle_id == mentorship_cycle.id }
   end
 
   # Find or build
   def build_mentorship_group(mentorship_cycle:)
-    raise('expected an MentorshipCycle') unless mentorship_cycle.class.respond_to?(:effective_mentorships_mentorship_cycle?)
+    raise('expected an MentorshipCycle') unless mentorship_cycle.class.respond_to?(:effective_mentorships_cycle?)
     mentorship_group(mentorship_cycle: mentorship_cycle) || mentorship_groups.build(mentorship_cycle: mentorship_cycle)
   end
 
   # Find
   def mentorship_registration(mentorship_cycle:)
-    raise('expected an MentorshipCycle') unless mentorship_cycle.class.respond_to?(:effective_mentorships_mentorship_cycle?)
+    raise('expected an MentorshipCycle') unless mentorship_cycle.class.respond_to?(:effective_mentorships_cycle?)
     mentorship_registrations.find { |mentorship_registration| mentorship_registration.mentorship_cycle_id == mentorship_cycle.id }
   end
 
   # Find or build
   def build_mentorship_registration(mentorship_cycle:)
-    raise('expected an MentorshipCycle') unless mentorship_cycle.class.respond_to?(:effective_mentorships_mentorship_cycle?)
+    raise('expected an MentorshipCycle') unless mentorship_cycle.class.respond_to?(:effective_mentorships_cycle?)
     mentorship_registration(mentorship_cycle: mentorship_cycle) || mentorship_registrations.build(mentorship_cycle: mentorship_cycle)
   end
 

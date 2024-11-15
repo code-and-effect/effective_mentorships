@@ -1,1 +1,10 @@
 %h2 #{mentorships_name_label}
+
+-# In progress ballot
+- datatable = EffectiveResources.best('EffectiveMentorshipsRegistrableCyclesDatatable').new(self, namespace: :effective)
+
+- if datatable.present?
+  %p The following #{etsd(Effective::MentorshipCycle)} are available for registration:
+  = render_datatable(datatable, simple: true)
+- else
+  %p There are no available #{etsd(Effective::MentorshipCycle)} for registration. When there are, we'll show them here.

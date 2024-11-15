@@ -28,6 +28,14 @@ module EffectiveMentorshipsHelper
     ets(Effective::MentorshipCycle)
   end
 
+  def mentorship_registration_label
+    et(EffectiveMentorships.MentorshipRegistration)
+  end
+
+  def mentorship_registrations_label
+    ets(EffectiveMentorships.MentorshipRegistration)
+  end
+
   def mentorship_group_label
     et(EffectiveMentorships.MentorshipGroup)
   end
