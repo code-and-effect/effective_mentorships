@@ -48,6 +48,10 @@ module EffectiveMentorshipsRegistration
     scope :deep, -> { includes(:rich_texts, :user, :mentorship_cycle) }
     scope :sorted, -> { order(:id) }
 
+    scope :mentors, -> { where(mentorship_role: 'A Mentor') }
+    scope :mentees, -> { where(mentorship_role: 'A Protege') }
+    scope :both, -> { where(mentorship_role: 'Both') }
+
     before_validation do
       self.user ||= current_user
     end

@@ -1,0 +1,14 @@
+= effective_form_with(model: [:admin, mentorship_registration], engine: true) do |f|
+  - # Admin only fields
+  = f.select :mentorship_cycle_id, Effective::MentorshipCycle.sorted.all
+
+  - if inline_datatable?
+    = f.hidden_field :user_id
+  - else
+    - ajax_url = (effective_resources.users_effective_ajax_index_path) unless Rails.env.test?
+    = f.select :user_id, current_user.class.all, label: 'User', ajax_url: ajax_url
+
+  - # Same fields user sees
+  = render('effective/mentorship_registrations/fields', f: f)
+
+  = effective_submit(f)

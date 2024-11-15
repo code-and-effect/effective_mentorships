@@ -1,1 +1,7 @@
-= f.select :mentorship_role, EffectiveMentorships.MentorshipRegistration.mentorship_roles, required: true
+= f.radios :mentorship_role, EffectiveMentorships.MentorshipRegistration.mentorship_roles, required: true, inline: true
+
+- if defined?(EffectiveArticleEditor)
+  = f.article_editor :rich_text_comments, label: "Comments"
+- else
+  = f.rich_text_area :rich_text_comments, label: "Comments"
+

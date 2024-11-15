@@ -1,0 +1,7 @@
+= tabs do
+  = tab(mentorship_registration) do
+    = render '/admin/mentorship_registrations/form_mentorship_registration', mentorship_registration: mentorship_registration
+
+  - if mentorship_registration.persisted? && mentorship_registration.respond_to?(:logs_datatable)
+    = tab 'Logs' do
+      = render_datatable(mentorship_registration.logs_datatable, inline: true)
