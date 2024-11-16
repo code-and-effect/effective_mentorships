@@ -17,7 +17,7 @@ module EffectiveMentorshipsRegistration
     def effective_mentorships_registration?; true; end
 
     def mentorship_roles
-      ['A Mentor', 'A Protege', 'Both']
+      [:mentor, :mentee, :both]
     end
   end
 
@@ -48,9 +48,9 @@ module EffectiveMentorshipsRegistration
     scope :deep, -> { includes(:rich_texts, :user, :mentorship_cycle) }
     scope :sorted, -> { order(:id) }
 
-    scope :mentors, -> { where(mentorship_role: 'A Mentor') }
-    scope :mentees, -> { where(mentorship_role: 'A Protege') }
-    scope :both, -> { where(mentorship_role: 'Both') }
+    scope :mentors, -> { where(mentorship_role: :mentor) }
+    scope :mentees, -> { where(mentorship_role: :mentee) }
+    scope :both, -> { where(mentorship_role: :both) }
 
     before_validation do
       self.user ||= current_user
@@ -58,11 +58,24 @@ module EffectiveMentorshipsRegistration
 
     # User
     validates :user_id, uniqueness: { scope: [:mentorship_cycle_id] }
-    validates :mentorship_role, presence: true, inclusion: { in: mentorship_roles }
+    validates :mentorship_role, presence: true, inclusion: { in: mentorship_roles.map(&:to_s) }
   end
 
   # Instance Methods
   def to_s
     mentorship_role.presence || model_name.human
   end
+
+  def mentor?
+    mentorship_role == 'mentor'
+  end
+
+  def mentee?
+    mentorship_role == 'mentee'
+  end
+
+  def both?
+    mentorship_role == 'both'
+  end
+
 end

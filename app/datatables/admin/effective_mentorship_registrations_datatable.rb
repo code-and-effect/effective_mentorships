@@ -18,7 +18,9 @@ module Admin
       col :mentorship_cycle
       col :user
 
-      col :mentorship_role, search: EffectiveMentorships.MentorshipRegistration.mentorship_roles
+      col :mentorship_role, search: mentorship_roles_collection() do |registration|
+        mentorship_role_label(registration.mentorship_role)
+      end
 
       col :rich_text_comments, label: "Comments"
 

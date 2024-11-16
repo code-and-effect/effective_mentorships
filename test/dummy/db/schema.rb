@@ -76,9 +76,22 @@ ActiveRecord::Schema.define(version: 101) do
     t.datetime "created_at"
   end
 
+  create_table "mentorship_group_users", force: :cascade do |t|
+    t.integer "mentorship_cycle_id"
+    t.integer "mentorship_group_id"
+    t.string "user_type"
+    t.integer "user_id"
+    t.string "mentorship_role"
+    t.string "name"
+    t.string "email"
+    t.integer "position"
+    t.datetime "updated_at"
+    t.datetime "created_at"
+  end
+
   create_table "mentorship_groups", force: :cascade do |t|
     t.integer "mentorship_cycle_id"
-    t.integer "user_id"
+    t.string "title"
     t.boolean "archived", default: false
     t.string "token"
     t.datetime "updated_at"

@@ -1,0 +1,12 @@
+= effective_form_with(model: [:admin, mentorship_group_user], engine: true) do |f|
+  = f.select :mentorship_cycle_id, Effective::MentorshipCycle.sorted.all
+  = f.select :mentorship_group_id, EffectiveMentorships.MentorshipGroup.sorted.all
+
+  = f.select :mentorship_role, mentorship_roles_collection(), required: true, inline: true
+
+  = f.hidden_field :user_type, value: current_user.class.name
+
+  - ajax_url = (effective_resources.users_effective_ajax_index_path) unless Rails.env.test?
+  = f.select :user_id, current_user.class.all, ajax_url: ajax_url
+
+  = effective_submit(f)
