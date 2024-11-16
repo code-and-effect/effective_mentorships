@@ -28,6 +28,14 @@ module EffectiveMentorshipsHelper
     ets(EffectiveMentorships.MentorshipGroup)
   end
 
+  def mentorship_group_user_label
+    ets(Effective::MentorshipGroupUser)
+  end
+
+  def mentorship_group_users_label
+    ets(Effective::MentorshipGroupUser)
+  end
+
   def mentorships_mentee_label
     et('effective_mentorships.mentee')
   end
@@ -56,6 +64,10 @@ module EffectiveMentorshipsHelper
     else
       raise("unexpected mentorship role: #{role}")
     end
+  end
+
+  def mentorship_role_badge(mentorship_role)
+    badge(mentorship_role_label(mentorship_role))
   end
 
 end

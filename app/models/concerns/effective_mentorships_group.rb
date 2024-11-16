@@ -24,29 +24,36 @@ module EffectiveMentorshipsGroup
     log_changes if respond_to?(:log_changes)
 
     has_many_rich_texts
-    # rich_text_body
+    # rich_text_admin_notes
 
     # Effective Scoped
     belongs_to :mentorship_cycle, class_name: 'Effective::MentorshipCycle', counter_cache: true
 
-    # App Scoped
-    belongs_to :user
+    has_many :mentorship_group_users, class_name: 'Effective::MentorshipGroupUser', dependent: :delete_all
+    accepts_nested_attributes_for :mentorship_group_users, allow_destroy: true
 
     effective_resource do
-      archived      :boolean
+      title         :string
 
+      archived      :boolean
       token         :string
 
       timestamps
     end
 
-    scope :deep, -> { includes(:rich_texts) }
+    scope :deep, -> { includes(:mentorship_cycle, :rich_texts, mentorship_group_users: [:user]) }
     scope :sorted, -> { order(:id) }
+
+    validates :title, presence: true, uniqueness: true
   end
 
   # Instance Methods
   def to_s
     model_name.human
+  end
+
+  def mentorship_group_user(user:)
+    mentorship_group_users.find { |mgu| mgu.user == user }
   end
 
 end

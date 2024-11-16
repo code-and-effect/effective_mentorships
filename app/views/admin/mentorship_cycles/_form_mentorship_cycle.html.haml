@@ -25,9 +25,9 @@
     .col-md-6= f.datetime_field :registration_end_at, label: "Registration end", hint: "The last day that #{mentorships_mentors_label} and #{mentorships_mentees_label} can register for this #{mentorship_cycle_label}"
 
   - if defined?(EffectiveArticleEditor)
-    = f.article_editor :rich_text_registration_content, label: "Registration opt-in content", hint: "Will be displayed to the user when registering for this #{mentorship_cycle_label}"
+    = f.article_editor :rich_text_registration_content, label: "#{mentorship_registration_label} opt-in content", hint: "Will be displayed to the user when registering for this #{mentorship_cycle_label}"
   - else
-    = f.rich_text_area :rich_text_registration_content, label: "Registration opt-in content", hint: "Will be displayed to the user when registering for this #{mentorship_cycle_label}"
+    = f.rich_text_area :rich_text_registration_content, label: "#{mentorship_registration_label} opt-in content", hint: "Will be displayed to the user when registering for this #{mentorship_cycle_label}"
 
   = f.submit do
     = f.save 'Save'

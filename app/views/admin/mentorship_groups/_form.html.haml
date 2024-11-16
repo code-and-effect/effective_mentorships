@@ -1,0 +1,8 @@
+= tabs do
+  = tab(EffectiveResources.et(mentorship_group.class)) do
+    = render '/admin/mentorship_groups/form_mentorship_group', mentorship_group: mentorship_group
+
+  - if mentorship_group.persisted? 
+    - if mentorship_group.respond_to?(:logs_datatable)
+      = tab 'Logs' do
+        = render_datatable(mentorship_group.logs_datatable, inline: true)

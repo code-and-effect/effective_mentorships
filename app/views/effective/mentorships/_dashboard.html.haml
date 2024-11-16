@@ -1,10 +1,21 @@
 %h2 #{mentorships_name_label}
 
--# In progress ballot
+- # My Groups
+- datatable = EffectiveResources.best('EffectiveMentorshipsMyGroupsDatatable').new(self, namespace: :effective)
+
+- if datatable.present?
+  %p You are a member of the following #{mentorship_groups_label.downcase}:
+  = render_datatable(datatable, simple: true)
+- else
+  %p You are not a member of any #{mentorship_groups_label.downcase}.
+
+%hr
+
+-# Registrations
 - datatable = EffectiveResources.best('EffectiveMentorshipsRegistrableCyclesDatatable').new(self, namespace: :effective)
 
 - if datatable.present?
   %p The following #{etsd(Effective::MentorshipCycle)} are available for registration:
   = render_datatable(datatable, simple: true)
 - else
-  %p There are no available #{etsd(Effective::MentorshipCycle)} for registration. When there are, we'll show them here.
+  %p There are no #{etsd(Effective::MentorshipCycle)} available for registration. When there are, we'll show them here.

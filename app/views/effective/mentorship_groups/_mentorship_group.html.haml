@@ -1,0 +1,15 @@
+= effective_table_with(mentorship_group) do |f|
+  = f.static_field :mentorship_cycle
+  = f.static_field :title
+
+%h3= mentorship_group_users_label
+
+%table.table.table-sm
+  %tbody
+    - mentorship_group.mentorship_group_users.each do |mentorship_group_user|
+      - user = mentorship_group_user.user
+
+      %tr
+        %td= mentorship_role_badge(mentorship_group_user.mentorship_role)
+        %td= user
+        %td= mail_to(user.email)

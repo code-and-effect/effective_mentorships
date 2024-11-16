@@ -28,7 +28,7 @@ module Admin
       col :mentorship_registrations_count, label: mentorship_registrations_label
       col :mentorship_groups_count, label: mentorship_groups_label
 
-      col :rich_text_registration_content, visible: false
+      col :rich_text_registration_content, label: "#{mentorship_registration_label} opt-in content", visible: false
 
       actions_col
     end
