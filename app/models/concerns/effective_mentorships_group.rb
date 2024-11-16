@@ -18,12 +18,13 @@ module EffectiveMentorshipsGroup
   end
 
   included do
-    log_changes if respond_to?(:log_changes)
     acts_as_archived
     acts_as_tokened
 
-    # rich_text_body
+    log_changes if respond_to?(:log_changes)
+
     has_many_rich_texts
+    # rich_text_body
 
     # Effective Scoped
     belongs_to :mentorship_cycle, class_name: 'Effective::MentorshipCycle', counter_cache: true
