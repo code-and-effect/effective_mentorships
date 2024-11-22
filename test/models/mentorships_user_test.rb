@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class MentorshipsUserTest < ActiveSupport::TestCase
-
   test 'create a valid user' do
     user = build_user()
     assert user.valid?

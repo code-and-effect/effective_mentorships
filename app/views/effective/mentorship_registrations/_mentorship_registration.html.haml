@@ -1,9 +1,6 @@
-- mentorship_cycle = mentorship_registration.mentorship_cycle
-- raise('expected a mentorship cycle') unless mentorship_cycle.present?
+- if mentorship_registration.present?
+  - mentorship_cycle = mentorship_registration.mentorship_cycle
+  - raise('expected a mentorship cycle') unless mentorship_cycle.present?
 
-- if mentorship_cycle.rich_text_registration_content.present?
-  = card do
-    = mentorship_cycle.rich_text_registration_content
-
-= card do
-  = effective_table_with(mentorship_registration)
+  = effective_table_with(mentorship_registration) do |f|
+    = render('effective/mentorship_registrations/fields', f: f)

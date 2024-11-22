@@ -4,7 +4,6 @@ en:
     acronym: 'Mentorships'
     mentor: 'Mentor'
     mentee: 'Mentee'
-    both: 'Both'
 
   activerecord:
     models:

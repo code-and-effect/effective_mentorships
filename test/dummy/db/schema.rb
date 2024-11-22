@@ -101,7 +101,17 @@ ActiveRecord::Schema.define(version: 101) do
   create_table "mentorship_registrations", force: :cascade do |t|
     t.integer "mentorship_cycle_id"
     t.integer "user_id"
+    t.string "parent_type"
+    t.integer "parent_id"
+    t.string "title"
+    t.boolean "opt_in"
+    t.boolean "accept_declaration", default: false
     t.string "mentorship_role"
+    t.string "category"
+    t.string "venue"
+    t.string "location"
+    t.boolean "mentor_multiple_mentees"
+    t.integer "mentor_multiple_mentees_limit"
     t.string "token"
     t.datetime "updated_at"
     t.datetime "created_at"

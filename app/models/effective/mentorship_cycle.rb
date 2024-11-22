@@ -2,6 +2,7 @@ module Effective
   class MentorshipCycle < ActiveRecord::Base
     has_many_rich_texts
     # rich_text_registration_content
+    # rich_text_group_content
 
     has_many :mentorship_groups
     has_many :mentorship_registrations
@@ -56,6 +57,10 @@ module Effective
 
     def self.effective_mentorships_cycle?
       true
+    end
+
+    def self.latest_cycle
+      order(start_at: :desc).first
     end
 
     def to_s

@@ -27,8 +27,26 @@ module EffectiveMentorshipsTestBuilder
       end_at: Time.zone.now.end_of_day
     )
 
-    mentorship_cycle.rich_text_all_steps_content = 'All Steps Content'
+    mentorship_cycle.rich_text_registration_content = 'Registration content'
+    mentorship_cycle.rich_text_group_content = 'Group content'
+
     mentorship_cycle
+  end
+
+  def build_effective_mentorship_group(mentorship_cycle: nil, mentor: nil, mentee: nil)
+    mentorship_cycle ||= EffectiveMentorships.MentorshipCycle.first!
+    mentor ||= build_user()
+    mentee ||= build_user()
+
+    mentorship_group = EffectiveMentorships.MentorshipGroup.new(
+      mentorship_cycle: mentorship_cycle,
+      title: "A title",
+    )
+
+    mentorship_group.mentorship_group_users.build(user: mentor, mentorship_role: 'mentor')
+    mentorship_group.mentorship_group_users.build(user: mentee, mentorship_role: 'mentee')
+
+    mentorship_group
   end
 
 end

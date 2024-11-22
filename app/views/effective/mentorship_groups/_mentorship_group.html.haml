@@ -1,3 +1,9 @@
+- mentorship_cycle = mentorship_group.mentorship_cycle
+- raise('expected a mentorship cycle') unless mentorship_cycle.present?
+
+- if mentorship_cycle.rich_text_group_content.present?
+  .mt-4= mentorship_cycle.rich_text_group_content
+
 = effective_table_with(mentorship_group) do |f|
   = f.static_field :mentorship_cycle
   = f.static_field :title

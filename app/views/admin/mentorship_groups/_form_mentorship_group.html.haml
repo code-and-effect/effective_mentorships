@@ -18,7 +18,7 @@
     = card do
       .row
         .col-md-3
-          = fu.select :mentorship_role, mentorship_roles_collection(), required: true, inline: true, label: false
+          = fu.select :mentorship_role, mentorship_roles_collection(), required: true, label: false
 
         .col-md-9
           = fu.hidden_field :user_type, value: current_user.class.name
