@@ -58,6 +58,10 @@ module Effective
       true
     end
 
+    def self.latest_cycle
+      order(start_at: :desc).first
+    end
+
     def to_s
       title.presence || model_name.human
     end

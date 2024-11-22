@@ -17,12 +17,12 @@ module EffectiveMentorshipsUser
   end
 
   included do
+    # Effective Scoped
+    has_many :mentorship_group_users, -> { order(:mentorship_cycle_id).order(:id) }, class_name: 'Effective::MentorshipGroupUser', inverse_of: :user, dependent: :destroy
+
     # App Scoped
     has_many :mentorship_registrations, -> { order(:mentorship_cycle_id).order(:id) }, inverse_of: :user, dependent: :destroy
     accepts_nested_attributes_for :mentorship_registrations, allow_destroy: true
-
-    # Effective Scoped
-    has_many :mentorship_group_users, -> { order(:mentorship_cycle_id).order(:id) }, class_name: 'Effective::MentorshipGroupUser', inverse_of: :user, dependent: :destroy
 
     has_many :mentorship_groups, through: :mentorship_group_users
 
@@ -31,7 +31,13 @@ module EffectiveMentorshipsUser
 
   # Used for the dashboard datatables. Which cycles can we register for?
   def registrable_mentorship_cycles
-    Effective::MentorshipCycle.registrable.where.not(id: mentorship_group_users.select(:mentorship_cycle_id))
+    Effective::MentorshipCycle.registrable
+      .where.not(id: mentorship_group_users.select(:mentorship_cycle_id))
+      .where.not(id: mentorship_registrations.select(:mentorship_cycle_id))
+  end
+
+  def mentorship_registrations_without_groups
+    mentorship_registrations.where.not(mentorship_cycle_id: mentorship_group_users.select(:mentorship_cycle_id))
   end
 
   # Find

@@ -17,7 +17,19 @@ module EffectiveMentorshipsRegistration
     def effective_mentorships_registration?; true; end
 
     def mentorship_roles
-      [:mentor, :mentee, :both]
+      [:mentor, :mentee]
+    end
+
+    def categories
+      ['General', 'Industry Specific']
+    end
+
+    def locations
+      ['Canada', 'United States']
+    end
+
+    def venues
+      ['virtual', 'in person', 'either']
     end
   end
 
@@ -27,8 +39,8 @@ module EffectiveMentorshipsRegistration
     log_changes if respond_to?(:log_changes)
     acts_as_tokened
 
-    # rich_text_body
     has_many_rich_texts
+    # rich_text_comments
 
     # Effective Scoped
     belongs_to :mentorship_cycle, class_name: 'Effective::MentorshipCycle', counter_cache: true
@@ -37,33 +49,57 @@ module EffectiveMentorshipsRegistration
     belongs_to :user
 
     effective_resource do
-      # Preferences
-      mentorship_role   :string
+      title              :string # Auto generated
+
+      # Registration
+      opt_in             :boolean # Opt in to this mentorship cycle
+      mentorship_role    :string
+
+      # Pairing info
+      category           :string # Professional category interests
+      venue              :string # Preferred venue virtual or in person
+      location           :string # Closest city of residence
+
+      # Mentor only fields
+      mentor_multiple_mentees         :boolean
+      mentor_multiple_mentees_limit   :integer
+
+      # Mentee only fields
+      # None
 
       token             :string
-
       timestamps
     end
+
+    # Always assign title
+    before_validation do
+      self.title = [user, (opt_in ? mentorship_role : 'Opt Out')].compact.join(' - ')
+    end
+
+    with_options(if: -> { opt_in? }) do
+      validates :mentorship_role, presence: true
+      validates :category, presence: true
+      validates :venue, presence: true
+      validates :location, presence: true
+    end
+
+    validates :mentor_multiple_mentees_limit, numericality: { greater_than: 0 }, if: -> { opt_in? && mentor_multiple_mentees? }
 
     scope :deep, -> { includes(:rich_texts, :user, :mentorship_cycle) }
     scope :sorted, -> { order(:id) }
 
     scope :mentors, -> { where(mentorship_role: :mentor) }
     scope :mentees, -> { where(mentorship_role: :mentee) }
-    scope :both, -> { where(mentorship_role: :both) }
-
-    before_validation do
-      self.user ||= current_user
-    end
+    scope :opt_in, -> { where(opt_in: true) }
+    scope :opt_out, -> { where(opt_in: false) }
 
     # User
     validates :user_id, uniqueness: { scope: [:mentorship_cycle_id] }
-    validates :mentorship_role, presence: true, inclusion: { in: mentorship_roles.map(&:to_s) }
   end
 
   # Instance Methods
   def to_s
-    mentorship_role.presence || model_name.human
+    title.presence || model_name.human
   end
 
   def mentor?
@@ -72,10 +108,6 @@ module EffectiveMentorshipsRegistration
 
   def mentee?
     mentorship_role == 'mentee'
-  end
-
-  def both?
-    mentorship_role == 'both'
   end
 
 end

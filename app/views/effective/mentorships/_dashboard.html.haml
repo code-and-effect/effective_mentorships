@@ -1,21 +1,27 @@
 %h2 #{mentorships_name_label}
 
 - # My Groups
-- datatable = EffectiveResources.best('EffectiveMentorshipsMyGroupsDatatable').new(self, namespace: :effective)
+- groups = EffectiveResources.best('EffectiveMentorshipsGroupsDatatable').new(self, namespace: :effective)
 
-- if datatable.present?
+- if groups.present?
   %p You are a member of the following #{mentorship_groups_label.downcase}:
-  = render_datatable(datatable, simple: true)
+  = render_datatable(groups, simple: true)
 - else
-  %p You are not a member of any #{mentorship_groups_label.downcase}.
+  %p You are not a member of any #{mentorship_groups_label.downcase}. When you are, we'll show them here.
 
 %hr
 
--# Registrations
-- datatable = EffectiveResources.best('EffectiveMentorshipsRegistrableCyclesDatatable').new(self, namespace: :effective)
+-# Available Registrations
+- registered = EffectiveResources.best('EffectiveMentorshipsRegistrationsDatatable').new(self, namespace: :effective)
+- available = EffectiveResources.best('EffectiveMentorshipsAvailableCyclesDatatable').new(self, namespace: :effective)
 
-- if datatable.present?
-  %p The following #{etsd(Effective::MentorshipCycle)} are available for registration:
-  = render_datatable(datatable, simple: true)
-- else
-  %p There are no #{etsd(Effective::MentorshipCycle)} available for registration. When there are, we'll show them here.
+- if registered.present?
+  %p You have registered for the following #{etsd(Effective::MentorshipCycle)}:
+  = render_datatable(registered, simple: true)
+
+- if available.present?
+  %p You can register for the following #{etsd(Effective::MentorshipCycle)}:
+  = render_datatable(available, simple: true)
+
+- if available.blank? && registered.blank?
+  %p There are no #{'additional ' if groups.present? || registered.present?}#{etsd(Effective::MentorshipCycle)} available for registration. When there are, we'll show them here.

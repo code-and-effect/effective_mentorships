@@ -1,5 +1,5 @@
 # Dashboard - My mentorship groups
-class EffectiveMentorshipsMyGroupsDatatable < Effective::Datatable
+class EffectiveMentorshipsGroupsDatatable < Effective::Datatable
   datatable do
     order :mentorship_cycle
 
@@ -11,7 +11,7 @@ class EffectiveMentorshipsMyGroupsDatatable < Effective::Datatable
         user = mentorship_group_user.user
 
         content_tag(:div, class: 'col-resource_item') do
-          mentorship_role_badge(mentorship_group_user.mentorship_role) + ' ' + link_to(user, "mailto:#{user.email}")
+          mentorship_role_badge(mentorship_group_user.mentorship_role) + ' ' + link_to(user, "mailto:#{user.public_email.presence || user.email}")
         end
       end.join.html_safe
     end

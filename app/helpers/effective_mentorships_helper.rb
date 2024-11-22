@@ -56,11 +56,14 @@ module EffectiveMentorshipsHelper
     EffectiveMentorships.MentorshipRegistration.mentorship_roles.map { |role| [mentorship_role_label(role), role] }
   end
 
+  def mentorship_categories_collection
+    EffectiveMentorships.MentorshipRegistration.mentorship_categories
+  end
+
   def mentorship_role_label(role)
     case role.to_s
     when 'mentor' then et('effective_mentorships.mentor')
     when 'mentee' then et('effective_mentorships.mentee')
-    when 'both' then et('effective_mentorships.both')
     else
       raise("unexpected mentorship role: #{role}")
     end
