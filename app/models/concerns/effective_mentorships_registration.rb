@@ -47,6 +47,7 @@ module EffectiveMentorshipsRegistration
 
     # App Scoped
     belongs_to :user
+    belongs_to :parent, polymorphic: true, optional: true # A FeePayment if this was done through a fee payment
 
     effective_resource do
       title              :string # Auto generated

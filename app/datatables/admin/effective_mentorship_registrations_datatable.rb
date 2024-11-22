@@ -29,6 +29,7 @@ module Admin
       col :mentor_multiple_mentees, visible: false
       col :mentor_multiple_mentees_limit, visible: false
 
+      col :parent, visible: false
       col :rich_text_comments, label: "Comments", visible: false
 
       actions_col
