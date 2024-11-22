@@ -2,6 +2,7 @@ module Effective
   class MentorshipCycle < ActiveRecord::Base
     has_many_rich_texts
     # rich_text_registration_content
+    # rich_text_group_content
 
     has_many :mentorship_groups
     has_many :mentorship_registrations

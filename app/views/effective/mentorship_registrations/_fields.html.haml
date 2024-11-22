@@ -15,6 +15,8 @@
   = f.select :location, f.object.class.locations(), required: true
   = f.radios :venue, f.object.class.venues(), required: true, inline: true
 
+  = f.check_box :accept_declaration, label: "Yes, I accept the #{et('effective_mentorships.name')} agreement", required: true
+
 - if defined?(EffectiveArticleEditor)
   = f.article_editor :rich_text_comments, label: "Comments"
 - else

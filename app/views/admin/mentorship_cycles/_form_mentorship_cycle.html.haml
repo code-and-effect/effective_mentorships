@@ -17,17 +17,25 @@
 
   %hr
 
-  %h2 Registration Opt-In
-  %p The online registration opt-in will be available between:
+  %h2 #{mentorship_registration_label}
+  %p The online #{mentorship_registration_label.downcase} opt-in will be available between:
 
   .row
     .col-md-6= f.datetime_field :registration_start_at, label: "Registration start", hint: "The first day that #{mentorships_mentors_label} and #{mentorships_mentees_label} can register for this #{mentorship_cycle_label}"
     .col-md-6= f.datetime_field :registration_end_at, label: "Registration end", hint: "The last day that #{mentorships_mentors_label} and #{mentorships_mentees_label} can register for this #{mentorship_cycle_label}"
 
+  %h2 Content
+
   - if defined?(EffectiveArticleEditor)
-    = f.article_editor :rich_text_registration_content, label: "#{mentorship_registration_label} opt-in content", hint: "Will be displayed to the user when registering for this #{mentorship_cycle_label}"
+    = f.article_editor :rich_text_registration_content, label: "#{mentorship_registration_label} opt-in content", hint: "Will be displayed to the user when registering for this #{mentorship_cycle_label.downcase}"
   - else
-    = f.rich_text_area :rich_text_registration_content, label: "#{mentorship_registration_label} opt-in content", hint: "Will be displayed to the user when registering for this #{mentorship_cycle_label}"
+    = f.rich_text_area :rich_text_registration_content, label: "#{mentorship_registration_label} opt-in content", hint: "Will be displayed to the user when registering for this #{mentorship_cycle_label.downcase}"
+
+  - if defined?(EffectiveArticleEditor)
+    = f.article_editor :rich_text_group_content, label: "#{mentorship_group_label} content", hint: "Will be displayed to the user when viewing their #{mentorship_group_label.downcase} for this #{mentorship_cycle_label.downcase}"
+  - else
+    = f.rich_text_area :rich_text_group_content, label: "#{mentorship_group_label} opt-in content", hint: "Will be displayed to the user when viewing their #{mentorship_group_label.downcase} for this #{mentorship_cycle_label.downcase}"
+
 
   = f.submit do
     = f.save 'Save'

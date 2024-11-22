@@ -34,8 +34,6 @@ module EffectiveMentorshipsRegistration
   end
 
   included do
-    attr_accessor :current_user
-
     log_changes if respond_to?(:log_changes)
     acts_as_tokened
 
@@ -54,6 +52,7 @@ module EffectiveMentorshipsRegistration
 
       # Registration
       opt_in             :boolean # Opt in to this mentorship cycle
+      accept_declaration :boolean
       mentorship_role    :string
 
       # Pairing info
@@ -82,6 +81,7 @@ module EffectiveMentorshipsRegistration
       validates :category, presence: true
       validates :venue, presence: true
       validates :location, presence: true
+      validates :accept_declaration, acceptance: true
     end
 
     validates :mentor_multiple_mentees_limit, numericality: { greater_than: 0 }, if: -> { opt_in? && mentor_multiple_mentees? }
