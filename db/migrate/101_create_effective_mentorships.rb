@@ -68,7 +68,6 @@ class CreateEffectiveMentorships < ActiveRecord::Migration[6.0]
       t.string :venue
       t.string :location
 
-      t.boolean :mentor_multiple_mentees
       t.integer :mentor_multiple_mentees_limit
 
       t.string :token

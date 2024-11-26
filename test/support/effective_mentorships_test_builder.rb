@@ -24,7 +24,9 @@ module EffectiveMentorshipsTestBuilder
     mentorship_cycle = Effective::MentorshipCycle.new(
       title: 'Mentorship Cycle',
       start_at: Time.zone.now,
-      end_at: Time.zone.now.end_of_day
+      end_at: Time.zone.now.end_of_day,
+      registration_start_at: Time.zone.now.beginning_of_day,
+      registration_end_at: Time.zone.now.end_of_day
     )
 
     mentorship_cycle.rich_text_registration_content = 'Registration content'

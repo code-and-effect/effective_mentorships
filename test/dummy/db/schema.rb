@@ -104,13 +104,12 @@ ActiveRecord::Schema.define(version: 101) do
     t.string "parent_type"
     t.integer "parent_id"
     t.string "title"
-    t.boolean "opt_in"
+    t.boolean "opt_in", default: false
     t.boolean "accept_declaration", default: false
     t.string "mentorship_role"
     t.string "category"
     t.string "venue"
     t.string "location"
-    t.boolean "mentor_multiple_mentees"
     t.integer "mentor_multiple_mentees_limit"
     t.string "token"
     t.datetime "updated_at"
