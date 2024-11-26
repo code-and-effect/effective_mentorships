@@ -61,7 +61,6 @@ module EffectiveMentorshipsRegistration
       location           :string # Closest city of residence
 
       # Mentor only fields
-      mentor_multiple_mentees         :boolean
       mentor_multiple_mentees_limit   :integer
 
       # Mentee only fields
@@ -84,7 +83,7 @@ module EffectiveMentorshipsRegistration
       validates :accept_declaration, acceptance: true
     end
 
-    validates :mentor_multiple_mentees_limit, numericality: { greater_than: 0 }, if: -> { opt_in? && mentor_multiple_mentees? }
+    validates :mentor_multiple_mentees_limit, numericality: { greater_than: 0 }, if: -> { opt_in? && mentor? }
 
     scope :deep, -> { includes(:rich_texts, :user, :mentorship_cycle) }
     scope :sorted, -> { order(:id) }

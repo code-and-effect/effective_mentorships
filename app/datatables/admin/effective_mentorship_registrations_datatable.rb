@@ -26,7 +26,6 @@ module Admin
       col :category, search: EffectiveMentorships.MentorshipRegistration.categories
       col :venue, search: EffectiveMentorships.MentorshipRegistration.venues
       col :location, search: EffectiveMentorships.MentorshipRegistration.locations
-      col :mentor_multiple_mentees, visible: false
       col :mentor_multiple_mentees_limit, visible: false
 
       col :parent, visible: false
