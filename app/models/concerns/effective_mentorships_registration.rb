@@ -29,7 +29,7 @@ module EffectiveMentorshipsRegistration
     end
 
     def venues
-      ['virtual', 'in person', 'either']
+      ['Virtual', 'In-person', 'Either']
     end
   end
 
