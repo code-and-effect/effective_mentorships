@@ -59,7 +59,7 @@ class CreateEffectiveMentorships < ActiveRecord::Migration[6.0]
 
       t.string :title
 
-      t.boolean :opt_in
+      t.boolean :opt_in, default: false
       t.boolean :accept_declaration, default: false
 
       t.string :mentorship_role

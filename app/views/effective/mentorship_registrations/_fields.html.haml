@@ -1,19 +1,20 @@
 - unless local_assigns[:namespace] == :admin
   = f.hidden_field :mentorship_cycle_id
 
-= f.radios :opt_in, :boolean, label: "Do you wish to register in the #{f.object.mentorship_cycle || et('effective_mentorships.name')}?", inline: true
+= f.radios :opt_in, :boolean, label: "Do you wish to register in the #{f.object.mentorship_cycle || et('effective_mentorships.name')}?"
 
 = f.hide_if(:opt_in, false) do
-  = f.radios :mentorship_role, mentorship_roles_collection(), label: "Register as", required: true, inline: true
+  = f.radios :mentorship_role, mentorship_roles_collection(), label: "Register as a:", required: true
 
   = f.show_if(:mentorship_role, 'mentor') do
-    = card(mentorships_mentor_label) do
-      = f.radios :mentor_multiple_mentees, :boolean, label: "Are you willing to #{mentorships_mentor_label.downcase} more than one #{mentorships_mentee_label.downcase}?", required: true, inline: true
-      = f.number_field :mentor_multiple_mentees_limit, label: "Please indicate how many #{mentorships_mentee_label.downcase.pluralize} you could accommodate", required: true
+    = f.radios :mentor_multiple_mentees_limit, [1, 2, 3, 4, 5], label: "How many #{mentorships_mentee_label.downcase.pluralize} are you willing to #{mentorships_mentor_label.downcase}?"
 
   = f.select :category, f.object.class.categories(), required: true
   = f.select :location, f.object.class.locations(), required: true
-  = f.radios :venue, f.object.class.venues(), required: true, inline: true
+  = f.radios :venue, f.object.class.venues(), required: true
+
+  - if mentorship_cycle.rich_text_registration_content.present?
+    .my-4= mentorship_cycle.rich_text_registration_content
 
   = f.check_box :accept_declaration, label: "Yes, I accept the #{et('effective_mentorships.name')} agreement", required: true
 
@@ -21,4 +22,3 @@
   = f.article_editor :rich_text_comments, label: "Comments"
 - else
   = f.rich_text_area :rich_text_comments, label: "Comments"
-
