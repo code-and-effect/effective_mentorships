@@ -27,15 +27,19 @@
   %h2 Content
 
   - if defined?(EffectiveArticleEditor)
-    = f.article_editor :rich_text_registration_content, label: "#{mentorship_registration_label} opt-in content", hint: "Will be displayed to the user when registering for this #{mentorship_cycle_label.downcase}"
+    = f.article_editor :rich_text_registration_content, label: "#{mentorship_registration_label} opt-in content", hint: "Will be displayed to the user when registering for this #{mentorship_cycle_label.downcase}."
   - else
-    = f.rich_text_area :rich_text_registration_content, label: "#{mentorship_registration_label} opt-in content", hint: "Will be displayed to the user when registering for this #{mentorship_cycle_label.downcase}"
+    = f.rich_text_area :rich_text_registration_content, label: "#{mentorship_registration_label} opt-in content", hint: "Will be displayed to the user when registering for this #{mentorship_cycle_label.downcase}."
 
   - if defined?(EffectiveArticleEditor)
-    = f.article_editor :rich_text_group_content, label: "#{mentorship_group_label} content", hint: "Will be displayed to the user when viewing their #{mentorship_group_label.downcase} for this #{mentorship_cycle_label.downcase}"
+    = f.article_editor :rich_text_agreement_content, label: "#{mentorship_registration_label} agreement", hint: "Will be displayed to the user above a checkbox to accept."
   - else
-    = f.rich_text_area :rich_text_group_content, label: "#{mentorship_group_label} opt-in content", hint: "Will be displayed to the user when viewing their #{mentorship_group_label.downcase} for this #{mentorship_cycle_label.downcase}"
+    = f.rich_text_area :rich_text_agreement_content, label: "#{mentorship_registration_label}  agreement", hint: "Will be displayed to the user above a checkbox to accept."
 
+  - if defined?(EffectiveArticleEditor)
+    = f.article_editor :rich_text_group_content, label: "#{mentorship_group_label} content", hint: "Will be displayed to the user when viewing their #{mentorship_group_label.downcase} for this #{mentorship_cycle_label.downcase}."
+  - else
+    = f.rich_text_area :rich_text_group_content, label: "#{mentorship_group_label} opt-in content", hint: "Will be displayed to the user when viewing their #{mentorship_group_label.downcase} for this #{mentorship_cycle_label.downcase} and after opt-in."
 
   = f.submit do
     = f.save 'Save'

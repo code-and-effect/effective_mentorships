@@ -3,9 +3,14 @@
 
 - url = (mentorship_registration.persisted? ? effective_mentorships.mentorship_cycle_mentorship_registration_path(mentorship_cycle, mentorship_registration) : effective_mentorships.mentorship_cycle_mentorship_registrations_path(mentorship_cycle, mentorship_registration))
 
-= card do
-  %h2= et('effective_mentorships.name')
+%h1= et('effective_mentorships.name')
 
+- if mentorship_registration.persisted?
+  - if mentorship_registration.mentorship_cycle.rich_text_group_content.present?
+    = card do
+      = mentorship_registration.mentorship_cycle.rich_text_group_content
+
+= card do
   = effective_form_with(model: mentorship_registration, url: url) do |f|
     = f.hidden_field :user_id, value: current_user.id
     = render('effective/mentorship_registrations/fields', f: f)
