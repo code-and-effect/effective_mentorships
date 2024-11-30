@@ -5,7 +5,7 @@
 
 %h1= et('effective_mentorships.name')
 
-- if mentorship_registration.persisted?
+- if mentorship_registration.persisted? && mentorship_registration.opt_in?
   - if mentorship_registration.mentorship_cycle.rich_text_group_content.present?
     = card do
       = mentorship_registration.mentorship_cycle.rich_text_group_content
