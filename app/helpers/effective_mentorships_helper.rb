@@ -64,6 +64,7 @@ module EffectiveMentorshipsHelper
     case role.to_s
     when 'mentor' then et('effective_mentorships.mentor')
     when 'mentee' then et('effective_mentorships.mentee')
+    when '' then ''
     else
       raise("unexpected mentorship role: #{role}")
     end
