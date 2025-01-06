@@ -44,16 +44,29 @@ module EffectiveMentorshipsGroup
     scope :deep, -> { includes(:mentorship_cycle, :rich_texts, mentorship_group_users: [:user]) }
     scope :sorted, -> { order(:id) }
 
-    validates :title, presence: true, uniqueness: true
+    before_save :assign_title # Assign computed title always
   end
 
   # Instance Methods
   def to_s
-    model_name.human
+    title.presence || model_name.human
+  end
+
+  def assign_title
+    if present_mentorship_group_users.blank?
+      assign_attributes(title: "Empty Group")
+    else
+      first_names = present_mentorship_group_users.map { |gu| gu.user.try(:first_name) || gu.user.to_s.split(' ').first }.sort
+      assign_attributes(title: first_names.join(', '))
+    end
   end
 
   def mentorship_group_user(user:)
     mentorship_group_users.find { |mgu| mgu.user == user }
+  end
+
+  def present_mentorship_group_users
+    mentorship_group_users.reject(&:marked_for_destruction?)
   end
 
 end

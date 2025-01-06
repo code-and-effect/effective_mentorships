@@ -1,6 +1,8 @@
 = effective_form_with(model: [:admin, mentorship_group], engine: true) do |f|
   = f.select :mentorship_cycle_id, Effective::MentorshipCycle.sorted.all
-  = f.text_field :title
+
+  - if f.object.persisted?
+    = f.static_field :title
 
   - if defined?(EffectiveArticleEditor)
     = f.article_editor :rich_text_admin_notes, label: "Admin Notes"
