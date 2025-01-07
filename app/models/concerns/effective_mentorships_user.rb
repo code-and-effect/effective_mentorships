@@ -27,6 +27,35 @@ module EffectiveMentorshipsUser
     has_many :mentorship_groups, through: :mentorship_group_users
 
     scope :deep_effective_mentorships_user, -> { all }
+
+    scope :mentorships_opted_in, -> (mentorship_cycle) {
+      raise('expected an EffectiveMentorships.MentorshipCycle') unless mentorship_cycle.kind_of?(Effective::MentorshipCycle)
+
+      opted_in = EffectiveMentorships.MentorshipRegistration.opt_in.where(mentorship_cycle: mentorship_cycle)
+      where(id: opted_in.select(:user_id))
+    }
+
+    scope :mentorships_opted_out, -> (mentorship_cycle) {
+      raise('expected an EffectiveMentorships.MentorshipCycle') unless mentorship_cycle.kind_of?(Effective::MentorshipCycle)
+
+      opted_out = EffectiveMentorships.MentorshipRegistration.opt_out.where(mentorship_cycle: mentorship_cycle)
+      where(id: opted_out.select(:user_id))
+    }
+
+    scope :mentorships_opted_in_mentors, -> (mentorship_cycle) {
+      raise('expected an EffectiveMentorships.MentorshipCycle') unless mentorship_cycle.kind_of?(Effective::MentorshipCycle)
+
+      opted_in_mentors = EffectiveMentorships.MentorshipRegistration.opt_in.mentors.where(mentorship_cycle: mentorship_cycle)
+      where(id: opted_in_mentors.select(:user_id))
+    }
+
+    scope :mentorships_opted_in_mentees, -> (mentorship_cycle) {
+      raise('expected an EffectiveMentorships.MentorshipCycle') unless mentorship_cycle.kind_of?(Effective::MentorshipCycle)
+
+      opted_in_mentees = EffectiveMentorships.MentorshipRegistration.opt_in.mentees.where(mentorship_cycle: mentorship_cycle)
+      where(id: opted_in_mentees.select(:user_id))
+    }
+
   end
 
   # Used for the dashboard datatables. Which cycles can we register for?

@@ -26,6 +26,9 @@ module EffectiveMentorshipsGroup
     has_many_rich_texts
     # rich_text_admin_notes
 
+    # Application Scoped
+    belongs_to :mentorship_bulk_group, optional: true, counter_cache: true
+
     # Effective Scoped
     belongs_to :mentorship_cycle, class_name: 'Effective::MentorshipCycle', counter_cache: true
 

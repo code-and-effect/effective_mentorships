@@ -12,6 +12,7 @@ module EffectiveMentorships
       app.config.to_prepare do
         ActiveRecord::Base.extend(EffectiveMentorshipsUser::Base)
         ActiveRecord::Base.extend(EffectiveMentorshipsGroup::Base)
+        ActiveRecord::Base.extend(EffectiveMentorshipsBulkGroup::Base)
         ActiveRecord::Base.extend(EffectiveMentorshipsRegistration::Base)
       end
     end

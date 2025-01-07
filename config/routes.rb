@@ -15,6 +15,10 @@ EffectiveMentorships::Engine.routes.draw do
     resources :mentorship_cycles, except: [:show]
     resources :mentorship_registrations, except: [:show]
 
+    resources :mentorship_bulk_groups, only: [:index, :new, :show, :destroy] do
+      resources :build, controller: :mentorship_bulk_groups, only: [:show, :update]
+    end
+
     resources :mentorship_groups, except: [:show] do
       post :archive, on: :member
       post :unarchive, on: :member

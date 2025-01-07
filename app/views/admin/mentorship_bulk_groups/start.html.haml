@@ -1,0 +1,8 @@
+= render 'layout' do
+  = render 'admin/mentorship_bulk_groups/content', resource: resource
+
+  = card do
+    = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
+      = f.hidden_field :id
+      = f.select :mentorship_cycle_id, Effective::MentorshipCycle.all
+      = f.save 'Save and Continue'

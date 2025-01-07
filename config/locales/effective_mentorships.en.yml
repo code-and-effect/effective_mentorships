@@ -10,6 +10,7 @@ en:
       # Application namespace
       app/mentorship_group: 'Mentorship group'
       app/mentorship_registration: 'Mentorship registration'
+      app/mentorship_bulk_group: 'Bulk Create Mentorship groups'
 
       # Effective namespace
       effective/mentorship_cycle: 'Mentorship cycle'

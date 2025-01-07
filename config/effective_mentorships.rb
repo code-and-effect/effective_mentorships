@@ -9,6 +9,7 @@ EffectiveMentorships.setup do |config|
   # Mentorship Class Settings
   # Configure the class responsible for the mentorships
   # config.mentorship_group_class_name = 'Effective::MentorshipGroup'
+  # config.mentorship_bulk_group_class_name = 'Effective::MentorshipBulkGroup'
   # config.mentorship_registration_class_name = 'Effective::MentorshipRegistration'
 
   # Mailer Settings
