@@ -42,11 +42,13 @@ module EffectiveMentorshipsRegistration
 
     # Effective Scoped
     belongs_to :mentorship_cycle, class_name: 'Effective::MentorshipCycle', counter_cache: true
+    has_many :mentorship_group_users, class_name: 'Effective::MentorshipGroupUser', inverse_of: :mentorship_registration, dependent: :nullify
 
     # App Scoped
     belongs_to :user
     belongs_to :parent, polymorphic: true, optional: true # A FeePayment if this was done through a fee payment
-
+    has_many :mentorship_groups, through: :mentorship_group_users
+    
     effective_resource do
       title              :string # Auto generated
 
@@ -92,18 +94,17 @@ module EffectiveMentorshipsRegistration
     scope :mentees, -> { where(mentorship_role: :mentee) }
     scope :opt_in, -> { where(opt_in: true) }
     scope :opt_out, -> { where(opt_in: false) }
+    scope :opt_in_without_groups, -> { opt_in.without_groups }
 
-    # scope :with_groups, -> { 
-    #   where(id: )
+    scope :with_groups, -> { 
+      group_users = Effective::MentorshipGroupUser.all
+      where(id: group_users.select(:mentorship_registration_id))
+    }
 
-    # }
-
-    # scope :opt_in_not_grouped, -> {
-    #   opt_in.where.not
-
-    #   #opt_in.where9.not(id: Effective::MentorshipGroupRegistration.select(:effective_mentorships_registration_id))
-
-    # }
+    scope :without_groups, -> {
+      group_users = Effective::MentorshipGroupUser.all
+      where.not(id: group_users.select(:mentorship_registration_id))
+    }
 
     # User
     validates :user_id, uniqueness: { scope: [:mentorship_cycle_id] }

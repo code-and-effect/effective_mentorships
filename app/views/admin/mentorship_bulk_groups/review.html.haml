@@ -5,13 +5,28 @@
     - cycle = resource.mentorship_cycle
 
     - groups_datatable = EffectiveResources.best('Admin::EffectiveMentorshipGroupsDatatable').new(self, mentorship_bulk_group: resource)
-    - registrations_datatable = EffectiveResources.best('Admin::EffectiveMentorshipRegistrationsDatatable').new(self, mentorship_cycle: cycle)
+    - all_registrations_datatable = EffectiveResources.best('Admin::EffectiveMentorshipRegistrationsDatatable').new(self, mentorship_cycle: cycle)
+    - opt_in_without_groups_registrations_datatable = EffectiveResources.best('Admin::EffectiveMentorshipRegistrationsDatatable').new(self, mentorship_cycle: cycle, opt_in_without_groups: true)
 
-    %h3 #{mentorship_registrations_label}
+    %h3 All #{mentorship_registrations_label}
 
     - # Mentorship Registrations
     = collapse("Show all #{mentorship_registrations_label.downcase}...", card_class: '') do
-      = render_datatable(registrations_datatable, inline: true, filters: false)
+      = render_datatable(all_registrations_datatable, inline: true, filters: false)
+
+    .my-4
+
+    %h3 Ungrouped #{mentorship_registrations_label}
+    %p
+      There are 
+      = pluralize(opt_in_without_groups_registrations_datatable.collection.mentors.count, mentorships_mentors_label.downcase).html_safe
+      and
+      = pluralize(opt_in_without_groups_registrations_datatable.collection.mentees.count, mentorships_mentees_label.downcase).html_safe
+      who opted-in but were not placed into #{mentorship_groups_label.downcase}.
+
+    - # Mentorship Registrations
+    = collapse("Show ungrouped opt-in #{mentorship_registrations_label.downcase}...", card_class: '') do
+      = render_datatable(opt_in_without_groups_registrations_datatable, inline: true, filters: false)
 
     .my-4
 

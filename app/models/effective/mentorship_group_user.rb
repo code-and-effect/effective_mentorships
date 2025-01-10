@@ -5,6 +5,8 @@ module Effective
 
     # App scoped
     belongs_to :mentorship_group
+
+    belongs_to :mentorship_registration, polymorphic: true, optional: true
     belongs_to :user, polymorphic: true
 
     effective_resource do
@@ -28,6 +30,11 @@ module Effective
       self.mentorship_cycle = mentorship_group.mentorship_cycle
     end
 
+    # Assign registration, if present
+    before_validation(if: -> { user.present? && mentorship_cycle.present? }) do
+      self.mentorship_registration ||= user.mentorship_registrations.find { |mentorship_registration| mentorship_registration.mentorship_cycle_id == mentorship_cycle.id }
+    end
+
     # Denormalized data for searching
     before_validation(if: -> { user.present? }) do
       assign_attributes(name: user.to_s, email: user.email)
@@ -37,10 +44,6 @@ module Effective
 
     def to_s
       user.to_s.presence || model_name.human
-    end
-
-    def mentorship_registration
-      user.mentorship_registrations.find { |mentorship_registration| mentorship_registration.mentorship_cycle_id == mentorship_cycle.id }
     end
 
     def mentor?
