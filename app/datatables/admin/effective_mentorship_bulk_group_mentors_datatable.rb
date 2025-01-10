@@ -53,7 +53,7 @@ module Admin
     end
 
     collection do
-      registrations = mentorship_bulk_group.mentors_mentorship_registrations
+      registrations = mentorship_bulk_group.mentors_mentorship_registrations.without_groups
       raise("expected a relation of registrations") unless registrations.klass.try(:effective_mentorships_registration?)
 
       registrations.joins(:user)

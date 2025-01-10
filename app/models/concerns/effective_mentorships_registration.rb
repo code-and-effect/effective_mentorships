@@ -87,7 +87,7 @@ module EffectiveMentorshipsRegistration
       validates :accept_declaration, acceptance: true
     end
 
-    validates :mentor_multiple_mentees_limit, numericality: { greater_than: 0 }, if: -> { opt_in? && mentor? }
+    validates :mentor_multiple_mentees_limit, numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 5 }, if: -> { opt_in? && mentor? }
 
     scope :deep, -> { includes(:rich_texts, :user, :mentorship_cycle) }
     scope :sorted, -> { order(:id) }
@@ -98,6 +98,10 @@ module EffectiveMentorshipsRegistration
     scope :opt_out, -> { where(opt_in: false) }
     scope :opt_in_without_groups, -> { opt_in.without_groups }
 
+    scope :in_person, -> { where(venue: 'In-person') }
+    scope :virtual, -> { where(venue: 'Virtual') }
+    scope :either, -> { where(venue: 'Either') }
+
     scope :with_groups, -> { 
       group_users = Effective::MentorshipGroupUser.all
       where(id: group_users.select(:mentorship_registration_id))
@@ -107,6 +111,20 @@ module EffectiveMentorshipsRegistration
       group_users = Effective::MentorshipGroupUser.all
       where.not(id: group_users.select(:mentorship_registration_id))
     }
+
+    scope :with_groups, -> { 
+      group_users = Effective::MentorshipGroupUser.all
+      where(id: group_users.select(:mentorship_registration_id))
+    }
+
+    scope :with_groups_from, -> (mentorship_bulk_group) { 
+      groups = EffectiveMentorships.MentorshipGroup.where(mentorship_bulk_group: mentorship_bulk_group)
+      group_users = Effective::MentorshipGroupUser.where(mentorship_group_id: groups.select(:mentorship_group_id))
+
+      where(id: group_users.select(:mentorship_registration_id))
+    }
+
+    scope :multiple_mentees, -> { mentors.where('mentor_multiple_mentees_limit > 1') }
 
     # User
     validates :user_id, uniqueness: { scope: [:mentorship_cycle_id] }
@@ -131,6 +149,7 @@ module EffectiveMentorshipsRegistration
     ].compact.join(', ').html_safe
   end
 
+  # Mentorship roles
   def mentor?
     mentorship_role.to_s == 'mentor'
   end
@@ -139,8 +158,17 @@ module EffectiveMentorshipsRegistration
     mentorship_role.to_s == 'mentee'
   end
 
-  def other?
-    !mentor? && !mentee?
+  # Venues
+  def in_person?
+    venue == 'In-person'
+  end
+
+  def virtual?
+    venue == 'Virtual'
+  end
+
+  def either?
+    venue == 'Either'
   end
 
 end

@@ -78,9 +78,8 @@ module EffectiveMentorshipsGroup
     else
       mentor_names = mentors.map { |user| user.try(:first_name) || user.to_s.split(' ').first }.sort
       mentee_names = mentees.map { |user| user.try(:first_name) || user.to_s.split(' ').first }.sort
-      other_names = others.map { |user| user.try(:first_name) || user.to_s.split(' ').first }.sort
 
-      assign_attributes(title: (mentor_names + mentee_names + other_names).join(', '))
+      assign_attributes(title: (mentor_names + mentee_names).join(', '))
     end
   end
 
@@ -134,10 +133,6 @@ module EffectiveMentorshipsGroup
 
   def mentees
     present_mentorship_group_users.select(&:mentee?).map(&:user)
-  end
-
-  def others
-    present_mentorship_group_users.select(&:other?).map(&:user)
   end
 
 end
