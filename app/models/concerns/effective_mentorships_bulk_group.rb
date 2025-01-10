@@ -43,7 +43,6 @@ module EffectiveMentorshipsBulkGroup
     accepts_nested_attributes_for :mentorship_groups, allow_destroy: true
 
     effective_resource do
-      mentorships_user_class_name   :string
       mentorship_groups_count       :integer
 
       email_form_skip   :boolean
@@ -65,20 +64,10 @@ module EffectiveMentorshipsBulkGroup
 
     scope :deep, -> { all }
     scope :sorted, -> { order(:id) }
-
-    before_validation(if: -> { current_user.present? }) do
-      self.mentorships_user_class_name ||= current_user.class.name
-    end
-
-    validates :mentorships_user_class_name, presence: true
   end
 
   def to_s
     model_name.human
-  end
-
-  def max_pairings_mentor
-    mentorship_cycle&.max_pairings_mentor
   end
 
   def max_pairings_mentee
@@ -102,22 +91,6 @@ module EffectiveMentorshipsBulkGroup
 
     registrations.where.not(user_id: existing.select(:user_id))
   end
-
-  # def mentorship_user_scope
-  #   mentorships_user_class_name.constantize.all if mentorships_user_class_name.present?
-  # end
-
-  # To be overrriden to implement selection criteria
-  # def mentorship_mentors
-  #   raise('expected a mentorship cycle') unless mentorship_cycle.present?
-  #   mentorship_user_scope.mentorships_opted_in_mentors(mentorship_cycle)
-  # end
-
-  # # Maybe to be overridden.
-  # def mentorship_mentees
-  #   raise('expected a mentorship cycle') unless mentorship_cycle.present?
-  #   mentorship_user_scope.mentorships_opted_in_mentees(mentorship_cycle)
-  # end
 
   def group!
     # Calls create_groups! and save!

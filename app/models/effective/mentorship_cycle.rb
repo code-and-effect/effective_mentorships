@@ -19,7 +19,6 @@ module Effective
       registration_start_at :datetime
       registration_end_at   :datetime
 
-      max_pairings_mentor   :integer
       max_pairings_mentee   :integer
 
       mentorship_groups_count         :integer
@@ -41,6 +40,7 @@ module Effective
 
     validates :title, presence: true, uniqueness: true
     validates :start_at, presence: true
+    validates :max_pairings_mentee, numericality: { greater_than_or_equal_to: 1, allow_blank: true }
 
     validate(if: -> { start_at.present? && end_at.present? }) do
       errors.add(:end_at, 'must be after the start date') unless end_at > start_at

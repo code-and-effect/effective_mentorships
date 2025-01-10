@@ -8,10 +8,6 @@
 
   .row
     .col-md-6
-      = f.number_field :max_pairings_mentor, 
-        label: "Max #{mentorships_mentors_label} per #{mentorship_group_label}",
-        hint: "The maximum number of #{mentorships_mentors_label} that will be assigned to a #{mentorship_group_label}. Leave blank for no maximum."
-
       = f.number_field :max_pairings_mentee, label: "Max #{mentorships_mentees_label} per #{mentorship_group_label}",
         hint: "The maximum number of #{mentorships_mentees_label} that will be assigned to a #{mentorship_group_label}. Leave blank for no maximum."
 

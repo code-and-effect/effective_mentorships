@@ -16,8 +16,14 @@ module EffectiveMentorshipsRegistration
   module ClassMethods
     def effective_mentorships_registration?; true; end
 
+    # Don't change these roles
     def mentorship_roles
       [:mentor, :mentee]
+    end
+
+    # Don't change these venues
+    def venues
+      ['Virtual', 'In-person', 'Either']
     end
 
     def categories
@@ -26,10 +32,6 @@ module EffectiveMentorshipsRegistration
 
     def locations
       ['Canada', 'United States']
-    end
-
-    def venues
-      ['Virtual', 'In-person', 'Either']
     end
   end
 

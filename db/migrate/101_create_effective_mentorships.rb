@@ -9,7 +9,6 @@ class CreateEffectiveMentorships < ActiveRecord::Migration[6.0]
       t.datetime :registration_start_at
       t.datetime :registration_end_at
 
-      t.integer :max_pairings_mentor
       t.integer :max_pairings_mentee
 
       t.integer :mentorship_groups_count, default: 0
