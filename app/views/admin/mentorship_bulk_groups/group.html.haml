@@ -12,6 +12,8 @@
     = collapse("Show #{mentorships_mentors_label}...", card_class: '') do
       = render_datatable(datatable)
 
+    .my-4
+
     %h3 Eligible #{mentorships_mentees_label}
     - datatable = EffectiveResources.best('Admin::EffectiveMentorshipBulkGroupMenteesDatatable').new(self, mentorship_bulk_group: resource)
     - raise('expected a mentees datatable') if datatable.nil?
@@ -20,6 +22,10 @@
     = collapse("Show #{mentorships_mentees_label}...", card_class: '') do
       = render_datatable(datatable)
 
+    .my-4
+    
+    = render('admin/mentorship_bulk_groups/creation', resource: resource)
+
     = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
       = f.hidden_field :id
-      = f.save 'Save and Continue'
+      = f.submit "Create #{mentorship_groups_label}", center: true

@@ -1,0 +1,34 @@
+= render 'layout' do
+  = render 'admin/mentorship_bulk_groups/content', resource: resource
+
+  = card do
+    - cycle = resource.mentorship_cycle
+
+    - groups_datatable = EffectiveResources.best('Admin::EffectiveMentorshipGroupsDatatable').new(self, mentorship_bulk_group: resource)
+    - registrations_datatable = EffectiveResources.best('Admin::EffectiveMentorshipRegistrationsDatatable').new(self, mentorship_cycle: cycle)
+
+    %h3 #{mentorship_registrations_label}
+
+    - # Mentorship Registrations
+    = collapse("Show all #{mentorship_registrations_label.downcase}...", card_class: '') do
+      = render_datatable(registrations_datatable, inline: true, filters: false)
+
+    .my-4
+
+    %h3 Created #{mentorship_groups_label}
+    %p 
+      Based on the above
+      = link_to(cycle, effective_mentorships.edit_admin_mentorship_cycle_path(cycle), target: '_blank')
+      = mentorship_registrations_label.downcase
+      the following 
+      = pluralize(groups_datatable.collection.count, badge(:draft) + ' ' + mentorship_groups_label.downcase).html_safe
+      have been created.
+
+    %p Please edit, delete or create additional #{mentorship_groups_label.downcase} as needed.
+
+    -# Mentorship Groups
+    = render_datatable(groups_datatable, inline: true, filters: false)
+
+    = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
+      = f.hidden_field :id
+      = f.submit 'Save and Continue', center: true

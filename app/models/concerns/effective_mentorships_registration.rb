@@ -93,6 +93,18 @@ module EffectiveMentorshipsRegistration
     scope :opt_in, -> { where(opt_in: true) }
     scope :opt_out, -> { where(opt_in: false) }
 
+    # scope :with_groups, -> { 
+    #   where(id: )
+
+    # }
+
+    # scope :opt_in_not_grouped, -> {
+    #   opt_in.where.not
+
+    #   #opt_in.where9.not(id: Effective::MentorshipGroupRegistration.select(:effective_mentorships_registration_id))
+
+    # }
+
     # User
     validates :user_id, uniqueness: { scope: [:mentorship_cycle_id] }
   end
@@ -102,12 +114,30 @@ module EffectiveMentorshipsRegistration
     title.presence || model_name.human
   end
 
+  def short_category
+    return category unless category.to_s.include?('(') && category.to_s.include?(')')
+    category.to_s.split('(').first.strip
+  end
+
+  def details
+    [
+      short_category.presence, 
+      venue.presence, 
+      location.presence, 
+      ("Limit #{mentor_multiple_mentees_limit}" if mentor? && mentor_multiple_mentees_limit.present?)
+    ].compact.join(', ').html_safe
+  end
+
   def mentor?
-    mentorship_role == 'mentor'
+    mentorship_role.to_s == 'mentor'
   end
 
   def mentee?
-    mentorship_role == 'mentee'
+    mentorship_role.to_s == 'mentee'
+  end
+
+  def other?
+    !mentor? && !mentee?
   end
 
 end

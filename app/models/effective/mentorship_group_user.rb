@@ -39,5 +39,21 @@ module Effective
       user.to_s.presence || model_name.human
     end
 
+    def mentorship_registration
+      user.mentorship_registrations.find { |mentorship_registration| mentorship_registration.mentorship_cycle_id == mentorship_cycle.id }
+    end
+
+    def mentor?
+      mentorship_role.to_s == 'mentor'
+    end
+  
+    def mentee?
+      mentorship_role.to_s == 'mentee'
+    end
+
+    def other?
+      !mentor? && !mentee?
+    end
+
   end
 end

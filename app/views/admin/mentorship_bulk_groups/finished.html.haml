@@ -1,0 +1,10 @@
+= render 'layout' do
+  = render 'admin/mentorship_bulk_groups/content', resource: resource
+
+  = card do
+    %h3 #{mentorship_groups_label}
+    %p The following #{pluralize(resource.mentorship_groups.count, mentorship_group_label)} have been created:
+
+    - datatable = EffectiveResources.best('Admin::EffectiveMentorshipGroupsDatatable').new(self, mentorship_bulk_group: resource)
+    = render_datatable(datatable)
+

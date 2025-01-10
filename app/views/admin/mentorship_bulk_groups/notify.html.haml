@@ -1,0 +1,49 @@
+= render 'layout' do
+  = render 'admin/mentorship_bulk_groups/content', resource: resource
+
+  = card do
+    - groups_datatable = EffectiveResources.best('Admin::EffectiveMentorshipGroupsDatatable').new(self, mentorship_bulk_group: resource)
+
+    %h3 #{mentorship_groups_label}
+    %p 
+      There are 
+      = pluralize(resource.mentorship_groups.published.not_notified.count, badge(:published) + ' and not yet notified ' + mentorship_group_label.downcase).html_safe
+      ready to be notified.
+
+    - # Mentorship Groups
+    = collapse("Show #{mentorship_groups_label.downcase}...", card_class: '') do
+      = render_datatable(groups_datatable, inline: true, filters: false)
+
+    .my-4
+
+    = effective_form_with(model: resource, url: wizard_path(step), method: :put) do |f|
+      = f.hidden_field :id
+
+      %h3 Email to send
+      = f.check_box :email_form_skip, label: 'Do not send email'
+
+      = f.show_if :email_form_skip, true do
+        %p 
+          No emails will be sent.
+          Notifications can be sent from the
+          = link_to(mentorship_groups_label, effective_mentorships.admin_mentorship_groups_path, target: '_blank')
+          page at any time.
+
+        = f.submit "Skip notifying the #{mentorship_groups_label.downcase}", center: true
+
+      = f.hide_if :email_form_skip, true do
+        %p
+          The
+          - email = Effective::EmailTemplate.where(template_name: :mentorship_group_created_to_mentor).first!
+          = link_to('mentorship_group_created_to_mentor email', effective_email_templates.edit_admin_email_template_path(email), target: '_blank')
+          email will be sent to each #{mentorships_mentor_label.downcase}.
+
+        %p
+          The
+          - email = Effective::EmailTemplate.where(template_name: :mentorship_group_created_to_mentee).first!
+          = link_to('mentorship_group_created_to_mentee email', effective_email_templates.edit_admin_email_template_path(email), target: '_blank')
+          email will be sent to each #{mentorships_mentee_label.downcase}.
+
+        %p Only #{badge(:published)} #{mentorship_groups_label.downcase} that have not been previously notified will be sent an email.
+
+        = f.submit "Yes, notify the #{mentorship_groups_label.downcase}", center: true
