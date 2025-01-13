@@ -29,6 +29,7 @@ module EffectiveMentorshipsUser
     scope :deep_effective_mentorships_user, -> { all }
 
     scope :mentorships_opted_in, -> (mentorship_cycle) {
+      mentorship_cycle = Effective::MentorshipCycle.find(mentorship_cycle) if mentorship_cycle.kind_of?(Integer)
       raise('expected an EffectiveMentorships.MentorshipCycle') unless mentorship_cycle.kind_of?(Effective::MentorshipCycle)
 
       opted_in = EffectiveMentorships.MentorshipRegistration.opt_in.where(mentorship_cycle: mentorship_cycle)
@@ -36,6 +37,7 @@ module EffectiveMentorshipsUser
     }
 
     scope :mentorships_opted_out, -> (mentorship_cycle) {
+      mentorship_cycle = Effective::MentorshipCycle.find(mentorship_cycle) if mentorship_cycle.kind_of?(Integer)
       raise('expected an EffectiveMentorships.MentorshipCycle') unless mentorship_cycle.kind_of?(Effective::MentorshipCycle)
 
       opted_out = EffectiveMentorships.MentorshipRegistration.opt_out.where(mentorship_cycle: mentorship_cycle)
@@ -43,6 +45,7 @@ module EffectiveMentorshipsUser
     }
 
     scope :mentorships_opted_in_mentors, -> (mentorship_cycle) {
+      mentorship_cycle = Effective::MentorshipCycle.find(mentorship_cycle) if mentorship_cycle.kind_of?(Integer)
       raise('expected an EffectiveMentorships.MentorshipCycle') unless mentorship_cycle.kind_of?(Effective::MentorshipCycle)
 
       opted_in_mentors = EffectiveMentorships.MentorshipRegistration.opt_in.mentors.where(mentorship_cycle: mentorship_cycle)
@@ -50,6 +53,7 @@ module EffectiveMentorshipsUser
     }
 
     scope :mentorships_opted_in_mentees, -> (mentorship_cycle) {
+      mentorship_cycle = Effective::MentorshipCycle.find(mentorship_cycle) if mentorship_cycle.kind_of?(Integer)
       raise('expected an EffectiveMentorships.MentorshipCycle') unless mentorship_cycle.kind_of?(Effective::MentorshipCycle)
 
       opted_in_mentees = EffectiveMentorships.MentorshipRegistration.opt_in.mentees.where(mentorship_cycle: mentorship_cycle)
@@ -57,6 +61,7 @@ module EffectiveMentorshipsUser
     }
 
     scope :mentorships_with_groups, -> (mentorship_cycle) {
+      mentorship_cycle = Effective::MentorshipCycle.find(mentorship_cycle) if mentorship_cycle.kind_of?(Integer)
       raise('expected an EffectiveMentorships.MentorshipCycle') unless mentorship_cycle.kind_of?(Effective::MentorshipCycle)
 
       grouped = Effective::MentorshipGroupUser.where(mentorship_cycle: mentorship_cycle)
@@ -64,10 +69,39 @@ module EffectiveMentorshipsUser
     }
 
     scope :mentorships_without_groups, -> (mentorship_cycle) {
+      mentorship_cycle = Effective::MentorshipCycle.find(mentorship_cycle) if mentorship_cycle.kind_of?(Integer)
       raise('expected an EffectiveMentorships.MentorshipCycle') unless mentorship_cycle.kind_of?(Effective::MentorshipCycle)
 
       grouped = Effective::MentorshipGroupUser.where(mentorship_cycle: mentorship_cycle)
       where.not(id: grouped.select(:user_id))
+    }
+
+    scope :mentorships_mentors_with_groups, -> (mentorship_cycle) {
+      mentorship_cycle = Effective::MentorshipCycle.find(mentorship_cycle) if mentorship_cycle.kind_of?(Integer)
+      raise('expected an EffectiveMentorships.MentorshipCycle') unless mentorship_cycle.kind_of?(Effective::MentorshipCycle)
+
+      grouped = Effective::MentorshipGroupUser.mentors.where(mentorship_cycle: mentorship_cycle)
+      where(id: grouped.select(:user_id))
+    }
+
+    scope :mentorships_mentees_with_groups, -> (mentorship_cycle) {
+      mentorship_cycle = Effective::MentorshipCycle.find(mentorship_cycle) if mentorship_cycle.kind_of?(Integer)
+      raise('expected an EffectiveMentorships.MentorshipCycle') unless mentorship_cycle.kind_of?(Effective::MentorshipCycle)
+
+      grouped = Effective::MentorshipGroupUser.mentees.where(mentorship_cycle: mentorship_cycle)
+      where(id: grouped.select(:user_id))
+    }
+
+    scope :mentorships_participant_in_mentorship_cycle_id, -> (membership_cycle_id) {
+      mentorships_with_groups(membership_cycle_id)
+    }
+
+    scope :mentorships_mentor_in_mentorship_cycle_id, -> (membership_cycle_id) {
+      mentorships_mentors_with_groups(membership_cycle_id)
+    }
+
+    scope :mentorships_mentee_in_mentorship_cycle_id, -> (membership_cycle_id) {
+      mentorships_mentees_with_groups(membership_cycle_id)
     }
   end
 

@@ -25,6 +25,9 @@ module Effective
     scope :deep, -> { includes(:mentorship_cycle, :mentorship_group, :user) }
     scope :sorted, -> { order(:mentorship_cycle_id).order(:position) }
 
+    scope :mentors, -> { where(mentorship_role: 'mentor') }
+    scope :mentees, -> { where(mentorship_role: 'mentee') }
+
     # Assign position and cycle
     before_validation(if: -> { mentorship_group.present? }) do
       self.position ||= (mentorship_group.mentorship_group_users.map(&:position).compact.max || -1) + 1
