@@ -17,5 +17,5 @@
 - if available.present?
   = render_datatable(available, simple: true)
 
-- if available.blank? && registered.blank?
+- if available.blank? && registered.blank? && groups.blank?
   %p There are no #{'additional ' if groups.present? || registered.present?}#{etsd(Effective::MentorshipCycle)} available for registration. When there are, we'll show them here.

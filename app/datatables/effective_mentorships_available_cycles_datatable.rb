@@ -5,7 +5,7 @@ class EffectiveMentorshipsAvailableCyclesDatatable < Effective::Datatable
 
     col :title
 
-    col :registration, label: "Registration available" do |mentorship_cycle|
+    col :registration, label: "Available" do |mentorship_cycle|
       mentorship_cycle.registrable_date
     end
 

@@ -20,6 +20,6 @@ class EffectiveMentorshipsGroupsDatatable < Effective::Datatable
   end
 
   collection do
-    EffectiveMentorships.MentorshipGroup.deep.unarchived.where(id: current_user.mentorship_groups)
+    EffectiveMentorships.MentorshipGroup.deep.published.where(id: current_user.mentorship_groups)
   end
 end

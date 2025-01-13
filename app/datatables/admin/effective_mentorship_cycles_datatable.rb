@@ -22,7 +22,6 @@ module Admin
       col :registration_start_at, as: :date
       col :registration_end_at, as: :date
 
-      col :max_pairings_mentor, label: "Max #{mentorships_mentors_label}"
       col :max_pairings_mentee, label: "Max #{mentorships_mentees_label}"
 
       col :mentorship_registrations_count, label: mentorship_registrations_label

@@ -7,8 +7,8 @@ module EffectiveMentorships
 
   def self.config_keys
     [
-      :mentorship_cycles_table_name, :mentorship_groups_table_name, :mentorship_registrations_table_name,
-      :mentorship_group_class_name, :mentorship_registration_class_name,
+      :mentorship_cycles_table_name, :mentorship_bulk_groups_table_name, :mentorship_groups_table_name, :mentorship_registrations_table_name,
+      :mentorship_group_class_name, :mentorship_registration_class_name, :mentorship_bulk_group_class_name,
       :layout,
       :mailer, :parent_mailer, :deliver_method, :mailer_layout, :mailer_sender, :mailer_froms, :mailer_admin, :mailer_subject,
     ]
@@ -18,6 +18,10 @@ module EffectiveMentorships
 
   def self.mailer_class
     mailer&.constantize || Effective::MentorshipsMailer
+  end
+
+  def self.MentorshipBulkGroup
+    mentorship_bulk_group_class_name&.constantize || Effective::MentorshipBulkGroup
   end
 
   def self.MentorshipGroup

@@ -13,13 +13,20 @@ EffectiveMentorships::Engine.routes.draw do
 
   namespace :admin do
     resources :mentorship_cycles, except: [:show]
-    resources :mentorship_registrations, except: [:show]
+    resources :mentorship_registrations, only: [:index, :edit, :update, :delete]
+
+    resources :mentorship_bulk_groups, only: [:index, :new, :show, :destroy] do
+      resources :build, controller: :mentorship_bulk_groups, only: [:show, :update]
+    end
 
     resources :mentorship_groups, except: [:show] do
-      post :archive, on: :member
-      post :unarchive, on: :member
-      post :bulk_archive, on: :collection
-      post :bulk_unarchive, on: :collection
+      post :publish, on: :member
+      post :draft, on: :member
+      post :notify, on: :member
+
+      post :bulk_notify, on: :collection
+      post :bulk_publish, on: :collection
+      post :bulk_draft, on: :collection
     end
 
     resources :mentorship_group_users, except: [:show]

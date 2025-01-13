@@ -9,7 +9,6 @@ class CreateEffectiveMentorships < ActiveRecord::Migration[6.0]
       t.datetime :registration_start_at
       t.datetime :registration_end_at
 
-      t.integer :max_pairings_mentor
       t.integer :max_pairings_mentee
 
       t.integer :mentorship_groups_count, default: 0
@@ -21,10 +20,13 @@ class CreateEffectiveMentorships < ActiveRecord::Migration[6.0]
 
     create_table :mentorship_groups do |t|
       t.integer :mentorship_cycle_id
+      t.integer :mentorship_bulk_group_id
 
       t.string :title
 
-      t.boolean :archived, default: false
+      t.datetime :published_start_at
+      t.datetime :published_end_at
+      t.datetime :last_notified_at
 
       t.string :token
 
@@ -35,6 +37,9 @@ class CreateEffectiveMentorships < ActiveRecord::Migration[6.0]
     create_table :mentorship_group_users do |t|
       t.integer :mentorship_cycle_id
       t.integer :mentorship_group_id
+
+      t.string :mentorship_registration_type
+      t.integer :mentorship_registration_id
 
       t.string :user_type
       t.integer :user_id

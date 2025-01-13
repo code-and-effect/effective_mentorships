@@ -1,0 +1,24 @@
+%h3 Selection Criteria
+
+- cycle = resource.mentorship_cycle
+
+%p
+  = mentorships_mentors_label
+  and
+  = mentorships_mentees_label
+  with
+  = link_to(mentorship_registrations_label, effective_mentorships.admin_mentorship_registrations_path, target: '_blank')
+  that opted-in to the
+  = link_to(cycle, effective_mentorships.edit_admin_mentorship_cycle_path(cycle), target: '_blank')
+  will be selected.
+
+%p
+  = succeed('.') do
+    Each of the new
+    = link_to(mentorship_groups_label, effective_mentorships.admin_mentorship_groups_path, target: '_blank')
+    will be created with a maximum of
+    = pluralize(resource.max_pairings_mentee, mentorships_mentee_label)
+
+%p
+  Members already in 
+  #{mentorship_groups_label.downcase} for #{cycle} will not be selected.
