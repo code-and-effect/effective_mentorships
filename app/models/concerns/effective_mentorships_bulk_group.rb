@@ -128,71 +128,72 @@ module EffectiveMentorshipsBulkGroup
   def create_groups!
     # First pass
     # Create groups with 1 mentor and 1 best matching mentee each
-
-    # In-person
-    mentors_mentorship_registrations.without_groups.in_person.find_each do |mentor_registration|
-      mentorship_group = build_mentorship_group(mentor_registration)
-      mentorship_group&.save!
-    end
-
-    # Either
-    mentors_mentorship_registrations.without_groups.either.find_each do |mentor_registration|
-      mentorship_group = build_mentorship_group(mentor_registration)
-      mentorship_group&.save!
-    end
-
-    # Virtual
-    mentors_mentorship_registrations.without_groups.virtual.find_each do |mentor_registration|
-      mentorship_group = build_mentorship_group(mentor_registration)
-      mentorship_group&.save!
-    end
-
-    # Second pass
-    # Create groups with 1 mentor and any mentee
-    mentors_mentorship_registrations.without_groups.find_each do |mentor_registration|
-      mentorship_group = build_mentorship_group(mentor_registration, any_mentee: true)
-      mentorship_group&.save!
-    end
-
-    # Third pass
-    # Add best matching mentees to groups where mentor wants more than 1 mentee
-    if max_pairings_mentee > 1
-      fillable_mentors_mentorship_registrations = mentors_mentorship_registrations.multiple_mentees.with_groups_from(self)
-
+    EffectiveMentorships.MentorshipRegistration.uncached do
       # In-person
-      fillable_mentors_mentorship_registrations.in_person.find_each do |mentor_registration|
-        mentorship_group = fill_mentorship_group(mentor_registration)
+      mentors_mentorship_registrations.without_groups.in_person.find_each do |mentor_registration|
+        mentorship_group = build_mentorship_group(mentor_registration)
         mentorship_group&.save!
       end
 
       # Either
-      fillable_mentors_mentorship_registrations.either.find_each do |mentor_registration|
-        mentorship_group = fill_mentorship_group(mentor_registration)
+      mentors_mentorship_registrations.without_groups.either.find_each do |mentor_registration|
+        mentorship_group = build_mentorship_group(mentor_registration)
         mentorship_group&.save!
       end
 
       # Virtual
-      fillable_mentors_mentorship_registrations.virtual.find_each do |mentor_registration|
-        mentorship_group = fill_mentorship_group(mentor_registration)
+      mentors_mentorship_registrations.without_groups.virtual.find_each do |mentor_registration|
+        mentorship_group = build_mentorship_group(mentor_registration)
         mentorship_group&.save!
       end
-    end
 
-    # Fourth pass
-    # Add any mentees to groups where mentor wants more than 1 mentee
-    if max_pairings_mentee > 1
-      fillable_mentors_mentorship_registrations = mentors_mentorship_registrations.multiple_mentees.with_groups_from(self)
-
-      fillable_mentors_mentorship_registrations.find_each do |mentor_registration|
-        mentorship_group = fill_mentorship_group(mentor_registration, any_mentee: true)
+      # Second pass
+      # Create groups with 1 mentor and any mentee
+      mentors_mentorship_registrations.without_groups.find_each do |mentor_registration|
+        mentorship_group = build_mentorship_group(mentor_registration, any_mentee: true)
         mentorship_group&.save!
       end
-    end
 
-    # Call after_save callback on all mentorship groups
-    mentorship_groups.each do |mentorship_group|
-      mentorship_group.assign_attributes(save_as_draft: true)
-      after_save_mentorship_group!(mentorship_group)
+      # Third pass
+      # Add best matching mentees to groups where mentor wants more than 1 mentee
+      if max_pairings_mentee > 1
+        fillable_mentors_mentorship_registrations = mentors_mentorship_registrations.multiple_mentees.with_groups_from(self)
+
+        # In-person
+        fillable_mentors_mentorship_registrations.in_person.find_each do |mentor_registration|
+          mentorship_group = fill_mentorship_group(mentor_registration)
+          mentorship_group&.save!
+        end
+
+        # Either
+        fillable_mentors_mentorship_registrations.either.find_each do |mentor_registration|
+          mentorship_group = fill_mentorship_group(mentor_registration)
+          mentorship_group&.save!
+        end
+
+        # Virtual
+        fillable_mentors_mentorship_registrations.virtual.find_each do |mentor_registration|
+          mentorship_group = fill_mentorship_group(mentor_registration)
+          mentorship_group&.save!
+        end
+      end
+
+      # Fourth pass
+      # Add any mentees to groups where mentor wants more than 1 mentee
+      if max_pairings_mentee > 1
+        fillable_mentors_mentorship_registrations = mentors_mentorship_registrations.multiple_mentees.with_groups_from(self)
+
+        fillable_mentors_mentorship_registrations.find_each do |mentor_registration|
+          mentorship_group = fill_mentorship_group(mentor_registration, any_mentee: true)
+          mentorship_group&.save!
+        end
+      end
+
+      # Call after_save callback on all mentorship groups
+      mentorship_groups.each do |mentorship_group|
+        mentorship_group.assign_attributes(save_as_draft: true)
+        after_save_mentorship_group!(mentorship_group)
+      end
     end
 
     wizard_steps[:grouping] ||= Time.zone.now
