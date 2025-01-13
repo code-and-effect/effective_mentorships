@@ -87,17 +87,11 @@ module EffectiveMentorshipsGroup
     return false unless published?
 
     present_mentorship_group_users.each do |mentorship_group_user|
-      begin
-        case mentorship_group_user.mentorship_role.to_s
-        when 'mentor'
-          EffectiveMentorships.send_email(:mentorship_group_created_to_mentor, mentorship_group_user)
-        when 'mentee'
-          EffectiveMentorships.send_email(:mentorship_group_created_to_mentee, mentorship_group_user)
-        end
-      rescue => e
-        EffectiveLogger.error(e.message, associated: self) if defined?(EffectiveLogger)
-        ExceptionNotifier.notify_exception(e, data: { user_id: mentorship_group_user.user_id }) if defined?(ExceptionNotifier)
-        raise(e) if (Rails.env.test? || Rails.env.development?)
+      case mentorship_group_user.mentorship_role.to_s
+      when 'mentor'
+        EffectiveMentorships.send_email(:mentorship_group_created_to_mentor, mentorship_group_user)
+      when 'mentee'
+        EffectiveMentorships.send_email(:mentorship_group_created_to_mentee, mentorship_group_user)
       end
     end
 

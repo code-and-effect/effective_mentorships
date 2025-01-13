@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    effective_mentorships (0.1.0)
+    effective_mentorships (0.2.4)
       effective_bootstrap
       effective_datatables (>= 4.0.0)
       effective_email_templates
@@ -122,7 +122,7 @@ GEM
       effective_resources
       liquid
       rails
-    effective_resources (2.18.0)
+    effective_resources (2.27.0)
       rails
       sprockets-rails
     effective_roles (2.3.3)

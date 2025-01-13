@@ -68,7 +68,6 @@ ActiveRecord::Schema.define(version: 101) do
     t.datetime "end_at"
     t.datetime "registration_start_at"
     t.datetime "registration_end_at"
-    t.integer "max_pairings_mentor"
     t.integer "max_pairings_mentee"
     t.integer "mentorship_groups_count", default: 0
     t.integer "mentorship_registrations_count", default: 0
@@ -79,6 +78,8 @@ ActiveRecord::Schema.define(version: 101) do
   create_table "mentorship_group_users", force: :cascade do |t|
     t.integer "mentorship_cycle_id"
     t.integer "mentorship_group_id"
+    t.string "mentorship_registration_type"
+    t.integer "mentorship_registration_id"
     t.string "user_type"
     t.integer "user_id"
     t.string "mentorship_role"
@@ -91,8 +92,11 @@ ActiveRecord::Schema.define(version: 101) do
 
   create_table "mentorship_groups", force: :cascade do |t|
     t.integer "mentorship_cycle_id"
+    t.integer "mentorship_bulk_group_id"
     t.string "title"
-    t.boolean "archived", default: false
+    t.datetime "published_start_at"
+    t.datetime "published_end_at"
+    t.datetime "last_notified_at"
     t.string "token"
     t.datetime "updated_at"
     t.datetime "created_at"
