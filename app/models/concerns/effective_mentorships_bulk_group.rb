@@ -126,9 +126,10 @@ module EffectiveMentorshipsBulkGroup
 
   # Called by Effective::MentorshipsBulkCreateGroupsJob
   def create_groups!
-    # First pass
-    # Create groups with 1 mentor and 1 best matching mentee each
     EffectiveMentorships.MentorshipRegistration.uncached do
+      # First pass
+      # Create groups with 1 mentor and 1 best matching mentee each
+
       # In-person
       mentors_mentorship_registrations.without_groups.in_person.find_each do |mentor_registration|
         mentorship_group = build_mentorship_group(mentor_registration)
@@ -241,7 +242,7 @@ module EffectiveMentorshipsBulkGroup
 
     # Fill this group to limit of number of mentees
     limit = [mentor_registration.mentor_multiple_mentees_limit.to_i, max_pairings_mentee].min
-    fill_mentees = (limit - mentorship_group.mentorship_group_mentees.length)
+    fill_mentees = (limit - mentorship_group.mentorship_group_users.select(&:mentee?).length) # dont use mentorship_group_mentees here
     return unless fill_mentees > 0
 
     # We only support 1 mentor and many mentees
