@@ -8,6 +8,7 @@ class EffectiveMentorshipsRegistrationsDatatable < Effective::Datatable
     end
 
     col :opt_in
+
     col :mentorship_role do |mentorship_registration|
       if mentorship_registration.opt_in?
         badge(mentorship_registration.mentorship_role)

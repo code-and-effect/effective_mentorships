@@ -20,6 +20,13 @@ EffectiveMentorships::Engine.routes.draw do
     end
 
     resources :mentorship_groups, except: [:show] do
+      post :publish, on: :member
+      post :draft, on: :member
+      post :notify, on: :member
+
+      post :bulk_notify, on: :collection
+      post :bulk_publish, on: :collection
+      post :bulk_draft, on: :collection
     end
 
     resources :mentorship_group_users, except: [:show]

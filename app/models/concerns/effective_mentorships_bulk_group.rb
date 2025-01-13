@@ -18,11 +18,8 @@ module EffectiveMentorshipsBulkGroup
   end
 
   included do
-    attr_accessor :current_user
-
-    # acts_as_email_notification # effective_resources
-    log_changes
     acts_as_job_status
+    log_changes if respond_to?(:log_changes)
 
     acts_as_wizard(
       start: 'Start',
@@ -43,15 +40,15 @@ module EffectiveMentorshipsBulkGroup
     accepts_nested_attributes_for :mentorship_groups, allow_destroy: true
 
     effective_resource do
-      mentorship_groups_count       :integer
+      mentorship_groups_count :integer
 
-      email_form_skip   :boolean
+      email_form_skip         :boolean
 
       # Acts as Wizard
       wizard_steps            :text, permitted: false
 
       # Acts as Tokened
-      token             :string
+      token                   :string
 
       # Acts as Job Status
       job_status            :string
@@ -67,7 +64,7 @@ module EffectiveMentorshipsBulkGroup
   end
 
   def to_s
-    model_name.human
+    [model_name.human, ("##{id}" if id.present?)].compact.join(' ')
   end
 
   def max_pairings_mentee
@@ -129,9 +126,6 @@ module EffectiveMentorshipsBulkGroup
 
   # Called by Effective::MentorshipsBulkCreateGroupsJob
   def create_groups!
-    EffectiveMentorships.MentorshipGroup.delete_all
-    Effective::MentorshipGroupUser.delete_all
-
     # First pass
     # Create groups with 1 mentor each
 

@@ -84,6 +84,8 @@ module EffectiveMentorshipsGroup
   end
 
   def notify!
+    return false unless published?
+
     present_mentorship_group_users.each do |mentorship_group_user|
       begin
         case mentorship_group_user.mentorship_role.to_s

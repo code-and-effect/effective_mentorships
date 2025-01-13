@@ -8,8 +8,11 @@ module Admin
     resource_scope -> { EffectiveMentorships.MentorshipBulkGroup.deep.all }
     datatable -> { EffectiveResources.best('Admin::EffectiveMentorshipBulkGroupsDatatable').new }
 
-    def build_wizard_resource
-      resource_scope.new(current_user: current_user)
+    private
+
+    def permitted_params
+      model = (params.key?(:effective_mentorship_bulk_group) ? :effective_mentorship_bulk_group : :mentorship_bulk_group)
+      params.require(model).permit!
     end
 
   end

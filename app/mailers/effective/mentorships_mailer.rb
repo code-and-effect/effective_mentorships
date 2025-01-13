@@ -43,6 +43,7 @@ module Effective
         },
         group: {
           title: @mentorship_group.to_s,
+          mentorship_cycle: @mentorship_group.mentorship_cycle.to_s,
           mentor_names: @mentorship_group.mentors.map(&:to_s).join(', '),
           mentor_emails: @mentorship_group.mentors.map(&:email).join(', '),
           mentee_names: @mentorship_group.mentees.map(&:to_s).join(', '),

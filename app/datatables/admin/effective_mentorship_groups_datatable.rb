@@ -1,5 +1,25 @@
 module Admin
   class EffectiveMentorshipGroupsDatatable < Effective::Datatable
+    bulk_actions do
+      bulk_action(
+        "Notify all published selected #{mentorship_groups_label}",
+        effective_mentorships.bulk_notify_admin_mentorship_groups_path,
+        data: { confirm: "Send email notifications to all published #{mentorship_groups_label}?" }
+      )
+
+      bulk_action(
+        "Publish all selected #{mentorship_groups_label}",
+        effective_mentorships.bulk_publish_admin_mentorship_groups_path,
+        data: { confirm: "Publish all selected #{mentorship_groups_label}?" }
+      )
+
+      bulk_action(
+        "Draft all selected #{mentorship_groups_label}",
+        effective_mentorships.bulk_draft_admin_mentorship_groups_path,
+        data: { confirm: "Draft all selected #{mentorship_groups_label}?" }
+      )
+    end
+
     filters do
       scope :all
       scope :published
@@ -8,6 +28,8 @@ module Admin
 
     datatable do
       order :updated_at
+
+      bulk_actions_col
 
       col :updated_at, visible: false
       col :created_at, visible: false

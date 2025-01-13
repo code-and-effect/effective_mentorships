@@ -6,6 +6,7 @@ module Effective
     # App scoped
     belongs_to :mentorship_group
 
+    # Polymorphic app scoped
     belongs_to :mentorship_registration, polymorphic: true, optional: true
     belongs_to :user, polymorphic: true
 
@@ -53,10 +54,5 @@ module Effective
     def mentee?
       mentorship_role.to_s == 'mentee'
     end
-
-    def other?
-      !mentor? && !mentee?
-    end
-
   end
 end
