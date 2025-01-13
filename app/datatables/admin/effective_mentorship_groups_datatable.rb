@@ -59,9 +59,6 @@ module Admin
         end.join.html_safe
       end
 
-      #col :mentorship_group_mentors, label: mentorships_mentors_label
-      #col :mentorship_group_mentees, label: mentorships_mentees_label
-
       col(:mentorship_group_mentees, label: mentorships_mentees_label) do |mentorship_group|
         mentorship_group.mentorship_group_mentees.map do |mentorship_group_user| 
           user = mentorship_group_user.user
