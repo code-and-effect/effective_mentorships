@@ -127,85 +127,108 @@ module EffectiveMentorshipsBulkGroup
   # Called by Effective::MentorshipsBulkCreateGroupsJob
   def create_groups!
     # First pass
-    # Create groups with 1 mentor each
-
-    # In-person
-    mentors_mentorship_registrations.without_groups.in_person.find_each do |mentor_registration|
-      mentorship_group = build_mentorship_group(mentor_registration)
-      mentorship_group&.save!
-    end
-
-    # Either
-    mentors_mentorship_registrations.without_groups.either.find_each do |mentor_registration|
-      mentorship_group = build_mentorship_group(mentor_registration)
-      mentorship_group&.save!
-    end
-
-    # Virtual
-    mentors_mentorship_registrations.without_groups.virtual.find_each do |mentor_registration|
-      mentorship_group = build_mentorship_group(mentor_registration)
-      mentorship_group&.save!
-    end
-
-    # Second pass
-    # Add mentees to groups where mentor wants more than 1 mentee
-    if max_pairings_mentee > 1
-      fillable_mentors_mentorship_registrations = mentors_mentorship_registrations.multiple_mentees.with_groups_from(self)
-
+    # Create groups with 1 mentor and 1 best matching mentee each
+    EffectiveMentorships.MentorshipRegistration.uncached do
       # In-person
-      fillable_mentors_mentorship_registrations.in_person.find_each do |mentor_registration|
-        mentorship_group = fill_mentorship_group(mentor_registration)
+      mentors_mentorship_registrations.without_groups.in_person.find_each do |mentor_registration|
+        mentorship_group = build_mentorship_group(mentor_registration)
         mentorship_group&.save!
       end
 
       # Either
-      fillable_mentors_mentorship_registrations.either.find_each do |mentor_registration|
-        mentorship_group = fill_mentorship_group(mentor_registration)
+      mentors_mentorship_registrations.without_groups.either.find_each do |mentor_registration|
+        mentorship_group = build_mentorship_group(mentor_registration)
         mentorship_group&.save!
       end
 
       # Virtual
-      fillable_mentors_mentorship_registrations.virtual.find_each do |mentor_registration|
-        mentorship_group = fill_mentorship_group(mentor_registration)
+      mentors_mentorship_registrations.without_groups.virtual.find_each do |mentor_registration|
+        mentorship_group = build_mentorship_group(mentor_registration)
         mentorship_group&.save!
       end
-    end
 
-    # Call after_save callback on all mentorship groups
-    mentorship_groups.each do |mentorship_group|
-      mentorship_group.assign_attributes(save_as_draft: true)
-      after_save_mentorship_group!(mentorship_group)
+      # Second pass
+      # Create groups with 1 mentor and any mentee
+      mentors_mentorship_registrations.without_groups.find_each do |mentor_registration|
+        mentorship_group = build_mentorship_group(mentor_registration, any_mentee: true)
+        mentorship_group&.save!
+      end
+
+      # Third pass
+      # Add best matching mentees to groups where mentor wants more than 1 mentee
+      if max_pairings_mentee > 1
+        fillable_mentors_mentorship_registrations = mentors_mentorship_registrations.multiple_mentees.with_groups_from(self)
+
+        # In-person
+        fillable_mentors_mentorship_registrations.in_person.find_each do |mentor_registration|
+          mentorship_group = fill_mentorship_group(mentor_registration)
+          mentorship_group&.save!
+        end
+
+        # Either
+        fillable_mentors_mentorship_registrations.either.find_each do |mentor_registration|
+          mentorship_group = fill_mentorship_group(mentor_registration)
+          mentorship_group&.save!
+        end
+
+        # Virtual
+        fillable_mentors_mentorship_registrations.virtual.find_each do |mentor_registration|
+          mentorship_group = fill_mentorship_group(mentor_registration)
+          mentorship_group&.save!
+        end
+      end
+
+      # Fourth pass
+      # Add any mentees to groups where mentor wants more than 1 mentee
+      if max_pairings_mentee > 1
+        fillable_mentors_mentorship_registrations = mentors_mentorship_registrations.multiple_mentees.with_groups_from(self)
+
+        fillable_mentors_mentorship_registrations.find_each do |mentor_registration|
+          mentorship_group = fill_mentorship_group(mentor_registration, any_mentee: true)
+          mentorship_group&.save!
+        end
+      end
+
+      # Call after_save callback on all mentorship groups
+      mentorship_groups.each do |mentorship_group|
+        mentorship_group.assign_attributes(save_as_draft: true)
+        after_save_mentorship_group!(mentorship_group)
+      end
     end
 
     wizard_steps[:grouping] ||= Time.zone.now
     save!
   end
 
-  def build_mentorship_group(mentor_registration)
+  def build_mentorship_group(mentor_registration, any_mentee: false)
     raise('expected a mentorship registration') unless mentor_registration.class.try(:effective_mentorships_registration?)
     raise('expected a mentor mentorship registration') unless mentor_registration.mentor?
 
     mentor = mentor_registration.user
     raise('expected a mentorship user') unless mentor.class.try(:effective_mentorships_user?)
 
-    # Create a new group in draft state
-    mentorship_group = mentorship_groups.build(mentorship_cycle: mentorship_cycle, save_as_draft: true)
-    mentorship_group.build_mentor(user: mentor_registration.user)
-
     # Select the best matching mentees for this mentor registration
     mentee_registration = find_best_mentee_registration(mentor_registration)
+
+    if any_mentee
+      mentee_registration ||= find_any_mentee_registration(mentor_registration) 
+    end
+
     return unless mentee_registration.present?
 
     mentee = mentee_registration.user
     raise('expected a mentorship user') unless mentee.class.try(:effective_mentorships_user?)
 
+    # Create a new group in draft state
+    mentorship_group = mentorship_groups.build(mentorship_cycle: mentorship_cycle, save_as_draft: true)
+    mentorship_group.build_mentor(user: mentor)
     mentorship_group.build_mentee(user: mentee)
 
     # Return the group ready to be saved
     mentorship_group
   end
 
-  def fill_mentorship_group(mentor_registration)
+  def fill_mentorship_group(mentor_registration, any_mentee: false)
     raise('expected a mentorship registration') unless mentor_registration.class.try(:effective_mentorships_registration?)
     raise('expected a mentor mentorship registration') unless mentor_registration.mentor?
 
@@ -223,7 +246,13 @@ module EffectiveMentorshipsBulkGroup
 
     # We only support 1 mentor and many mentees
     fill_mentees.times do
-      if(mentee_registration = find_best_mentee_registration(mentor_registration)).present?
+      mentee_registration = find_best_mentee_registration(mentor_registration)
+
+      if any_mentee
+        mentee_registration ||= find_any_mentee_registration(mentor_registration) 
+      end
+
+      if mentee_registration.present?
         mentee = mentee_registration.user
         raise('expected a mentorship user') unless mentee.class.try(:effective_mentorships_user?)
 
@@ -249,10 +278,12 @@ module EffectiveMentorshipsBulkGroup
     end
   end
 
-  def find_best_in_person_mentee_registration(mentor_registration)
-    raise('expected an in-person mentor registration') unless mentor_registration.in_person?
+  def find_any_mentee_registration(mentor_registration)
+    mentees_mentorship_registrations.without_groups.order(:id).first
+  end
 
-    registrations = mentees_mentorship_registrations.without_groups
+  def find_best_in_person_mentee_registration(mentor_registration)
+    registrations = mentees_mentorship_registrations.without_groups.order(:id)
 
     # In-person, same location, same category
     registration ||= registrations.in_person.where(location: mentor_registration.location, category: mentor_registration.category).first
@@ -273,7 +304,7 @@ module EffectiveMentorshipsBulkGroup
   def find_best_either_mentee_registration(mentor_registration)
     raise('expected an in-person mentor registration') unless mentor_registration.either?
 
-    registrations = mentees_mentorship_registrations.without_groups
+    registrations = mentees_mentorship_registrations.without_groups.order(:id)
 
     # Either, same location, same category
     registration ||= registrations.either.where(location: mentor_registration.location, category: mentor_registration.category).first
@@ -306,7 +337,7 @@ module EffectiveMentorshipsBulkGroup
   def find_best_virtual_mentee_registration(mentor_registration)
     raise('expected an in-person mentor registration') unless mentor_registration.virtual?
 
-    registrations = mentees_mentorship_registrations.without_groups
+    registrations = mentees_mentorship_registrations.without_groups.order(:id)
 
     # Virtual, same location, same category 
     registration ||= registrations.virtual.where(location: mentor_registration.location, category: mentor_registration.category).first

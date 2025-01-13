@@ -80,5 +80,24 @@ class CreateEffectiveMentorships < ActiveRecord::Migration[6.0]
       t.datetime :updated_at
       t.datetime :created_at
     end
+
+    create_table :mentorship_bulk_groups do |t|
+      t.integer :mentorship_cycle_id
+      t.integer :mentorship_groups_count, default: 0
+
+      t.boolean :email_form_skip, default: false
+      t.text :wizard_steps
+
+      t.string :token
+
+      t.string :job_status
+      t.datetime :job_started_at
+      t.datetime :job_ended_at
+      t.text :job_error
+
+      t.datetime :updated_at
+      t.datetime :created_at
+    end
+
   end
 end
