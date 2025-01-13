@@ -51,4 +51,52 @@ module EffectiveMentorshipsTestBuilder
     mentorship_group
   end
 
+  def build_effective_mentorship_registration(mentorship_cycle: nil, user: nil, opt_in: true, mentees_limit: nil, category: nil, venue: nil, location: nil, mentorship_role:)
+    mentorship_cycle ||= EffectiveMentorships.MentorshipCycle.first!
+    user ||= build_user()
+
+    category ||= EffectiveMentorships.MentorshipRegistration.categories.sample
+    venue ||= EffectiveMentorships.MentorshipRegistration.venues.sample
+    location ||= EffectiveMentorships.MentorshipRegistration.locations.sample
+    mentees_limit ||= 1
+
+    mentorship_registration = EffectiveMentorships.MentorshipRegistration.new(
+      mentorship_cycle: mentorship_cycle,
+      user: user,
+      mentorship_role: mentorship_role,
+      accept_declaration: true,
+      opt_in: opt_in,
+      category: category,
+      venue: venue,
+      location: location
+    )
+
+    user.assign_attributes(first_name: [mentorship_role, venue, location, category].join('-'))
+
+    if mentorship_registration.mentor?
+      mentorship_registration.assign_attributes(mentor_multiple_mentees_limit: mentees_limit)
+    end
+
+    mentorship_registration
+  end
+
+  def create_effective_mentorship_mentor_registration!(mentorship_cycle: nil, user: nil, opt_in: true, mentees_limit: nil, category: nil, venue: nil, location: nil)
+    registration = build_effective_mentorship_registration(mentorship_cycle: mentorship_cycle, user: user, opt_in: opt_in, mentees_limit: mentees_limit, category: category, venue: venue, location: location, mentorship_role: 'mentor')
+    registration.save!
+    registration
+  end
+
+  def create_effective_mentorship_mentee_registration!(mentorship_cycle: nil, user: nil, opt_in: true, category: nil, venue: nil, location: nil)
+    registration = build_effective_mentorship_registration(mentorship_cycle: mentorship_cycle, user: user, opt_in: opt_in, category: category, venue: venue, location: location, mentorship_role: 'mentee')
+    registration.save!
+    registration
+  end
+
+  def build_effective_mentorship_bulk_group(mentorship_cycle: nil)
+    mentorship_cycle ||= EffectiveMentorships.MentorshipCycle.first!
+
+    mentorship_bulk_group = EffectiveMentorships.MentorshipBulkGroup.new(mentorship_cycle: mentorship_cycle)
+    mentorship_bulk_group
+  end
+
 end

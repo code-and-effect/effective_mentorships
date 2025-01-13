@@ -1,7 +1,7 @@
 - unless local_assigns[:namespace] == :admin
   = f.hidden_field :mentorship_cycle_id
 
-- if f.object.mentorship_cycle.rich_text_registration_content.present?
+- if f.object.mentorship_cycle&.rich_text_registration_content.present?
   = f.object.mentorship_cycle.rich_text_registration_content
 
 = f.radios :opt_in, :boolean, label: "Do you wish to register in the #{f.object.mentorship_cycle || et('effective_mentorships.name')}?"
@@ -16,7 +16,7 @@
   = f.select :location, f.object.class.locations(), required: true
   = f.radios :venue, f.object.class.venues(), required: true
 
-  - if f.object.mentorship_cycle.rich_text_agreement_content.present?
+  - if f.object.mentorship_cycle&.rich_text_agreement_content.present?
     = card do
       = f.object.mentorship_cycle.rich_text_agreement_content
 

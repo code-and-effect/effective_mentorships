@@ -208,7 +208,11 @@ module EffectiveMentorshipsBulkGroup
 
     # Select the best matching mentees for this mentor registration
     mentee_registration = find_best_mentee_registration(mentor_registration)
-    mentee_registration ||= find_any_mentee_registration(mentor_registration) if any_mentee
+
+    if any_mentee
+      mentee_registration ||= find_any_mentee_registration(mentor_registration) 
+    end
+
     return unless mentee_registration.present?
 
     mentee = mentee_registration.user
@@ -216,7 +220,7 @@ module EffectiveMentorshipsBulkGroup
 
     # Create a new group in draft state
     mentorship_group = mentorship_groups.build(mentorship_cycle: mentorship_cycle, save_as_draft: true)
-    mentorship_group.build_mentor(user: mentor_registration.user)
+    mentorship_group.build_mentor(user: mentor)
     mentorship_group.build_mentee(user: mentee)
 
     # Return the group ready to be saved
@@ -242,7 +246,10 @@ module EffectiveMentorshipsBulkGroup
     # We only support 1 mentor and many mentees
     fill_mentees.times do
       mentee_registration = find_best_mentee_registration(mentor_registration)
-      mentee_registration ||= find_any_mentee_registration(mentor_registration) if any_mentee
+
+      if any_mentee
+        mentee_registration ||= find_any_mentee_registration(mentor_registration) 
+      end
 
       if mentee_registration.present?
         mentee = mentee_registration.user
