@@ -36,7 +36,7 @@ module Effective
 
     # Assign registration, if present
     before_validation(if: -> { user.present? && mentorship_cycle.present? }) do
-      self.mentorship_registration ||= user.mentorship_registrations.find { |mentorship_registration| mentorship_registration.mentorship_cycle_id == mentorship_cycle.id }
+      self.mentorship_registration = user.mentorship_registrations.find { |mentorship_registration| mentorship_registration.mentorship_cycle_id == mentorship_cycle.id }
     end
 
     # Denormalized data for searching
