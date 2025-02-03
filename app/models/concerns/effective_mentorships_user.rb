@@ -103,6 +103,10 @@ module EffectiveMentorshipsUser
     scope :mentorships_mentee_in_mentorship_cycle_id, -> (membership_cycle_id) {
       mentorships_mentees_with_groups(membership_cycle_id)
     }
+
+    scope :mentorships_opted_in_but_not_grouped_in_mentorship_cycle_id, -> (membership_cycle_id) {
+      mentorships_opted_in(membership_cycle_id).where(id: mentorships_without_groups(membership_cycle_id))
+    }
   end
 
   # Used for the dashboard datatables. Which cycles can we register for?
