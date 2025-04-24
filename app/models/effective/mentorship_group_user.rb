@@ -10,6 +10,8 @@ module Effective
     belongs_to :mentorship_registration, polymorphic: true, optional: true
     belongs_to :user, polymorphic: true
 
+    MENTORSHIP_ROLES = ['mentor', 'mentee']
+
     effective_resource do
       mentorship_role   :string
 

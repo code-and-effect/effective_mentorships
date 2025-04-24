@@ -21,7 +21,7 @@ module Admin
           collection.where(user_id: memberships.select('owner_id'))
         end
 
-        col(:membership_categories, label: 'Member Category', sort: false, visible: false, search: EffectiveMemberships.Category.sorted.all) do |registration|
+        col(:membership_categories, label: 'Member Category', sort: false, visible: false, search: effective_memberships_categories) do |registration|
           Array(registration.user.try(:membership).try(:membership_categories)).each do |membership_category|
             content_tag(:div, membership_category, class: 'col-resource')
           end.join.html_safe
@@ -30,7 +30,7 @@ module Admin
           collection.where(user_id: memberships.select('owner_id'))
         end
 
-        col(:membership_statuses, label: 'Member Status', sort: false, visible: false, search: EffectiveMemberships.Status.sorted.all) do |registration|
+        col(:membership_statuses, label: 'Member Status', sort: false, visible: false, search: effective_memberships_statuses) do |registration|
           Array(registration.user.try(:membership).try(:statuses)).each do |status|
             content_tag(:div, status, class: 'col-resource')
           end.join.html_safe

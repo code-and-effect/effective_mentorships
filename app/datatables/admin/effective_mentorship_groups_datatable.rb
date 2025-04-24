@@ -37,7 +37,7 @@ module Admin
       col :token, visible: false
 
       col :mentorship_bulk_group, visible: false
-      col :mentorship_cycle, visible: attributes[:mentorship_bulk_group_id].blank?
+      col :mentorship_cycle, search: :select, visible: attributes[:mentorship_bulk_group_id].blank?
 
       col :published?, as: :boolean
       col :published_start_at, label: "Published start", visible: false

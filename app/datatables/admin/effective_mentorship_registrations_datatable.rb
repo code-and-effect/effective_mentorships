@@ -15,7 +15,7 @@ module Admin
       col :id, visible: false
       col :token, visible: false
 
-      col :mentorship_cycle
+      col :mentorship_cycle, search: :select
       col :user
 
       col :opt_in, visible: attributes[:opt_in_without_groups].blank?
@@ -32,7 +32,7 @@ module Admin
       col :parent, visible: false
       col :rich_text_comments, label: "Comments", visible: false
 
-      col(:mentorship_groups, search: :string, visible: false) do |registration|
+      col(:mentorship_groups, visible: false) do |registration|
         registration.mentorship_groups.map do |mentorship_group|
           content_tag(:div, class: 'col-resource_item') do
             link_to(mentorship_group, effective_mentorships.edit_admin_mentorship_group_path(mentorship_group), target: '_blank')

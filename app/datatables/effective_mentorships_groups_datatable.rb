@@ -6,7 +6,7 @@ class EffectiveMentorshipsGroupsDatatable < Effective::Datatable
     col :mentorship_cycle
     col :title
 
-    col :mentorship_group_users, search: :string do |mentorship_group|
+    col :mentorship_group_users do |mentorship_group|
       mentorship_group.mentorship_group_users.map do |mentorship_group_user| 
         user = mentorship_group_user.user
 

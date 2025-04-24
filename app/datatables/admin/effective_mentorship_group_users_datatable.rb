@@ -7,7 +7,7 @@ module Admin
       col :created_at, visible: false
       col :id, visible: false
 
-      col :mentorship_cycle
+      col :mentorship_cycle, search: :select
       col :mentorship_group
       col :mentorship_role
       col :user
