@@ -34,6 +34,9 @@ class CreateEffectiveMentorships < ActiveRecord::Migration[6.0]
       t.datetime :created_at
     end
 
+    add_index :mentorship_groups, :mentorship_cycle_id, if_not_exists: true
+    add_index :mentorship_groups, :token, if_not_exists: true
+
     create_table :mentorship_group_users do |t|
       t.integer :mentorship_cycle_id
       t.integer :mentorship_group_id
@@ -54,6 +57,10 @@ class CreateEffectiveMentorships < ActiveRecord::Migration[6.0]
       t.datetime :updated_at
       t.datetime :created_at
     end
+
+    add_index :mentorship_group_users, [:user_type, :user_id], if_not_exists: true
+    add_index :mentorship_group_users, :mentorship_group_id, if_not_exists: true
+    add_index :mentorship_group_users, :position, if_not_exists: true
 
     create_table :mentorship_registrations do |t|
       t.integer :mentorship_cycle_id
@@ -81,6 +88,10 @@ class CreateEffectiveMentorships < ActiveRecord::Migration[6.0]
       t.datetime :created_at
     end
 
+    add_index :mentorship_registrations, :mentorship_cycle_id, if_not_exists: true
+    add_index :mentorship_registrations, :user_id, if_not_exists: true
+    add_index :mentorship_registrations, :token, if_not_exists: true
+
     create_table :mentorship_bulk_groups do |t|
       t.integer :mentorship_cycle_id
       t.integer :mentorship_groups_count, default: 0
@@ -99,5 +110,7 @@ class CreateEffectiveMentorships < ActiveRecord::Migration[6.0]
       t.datetime :created_at
     end
 
+    add_index :mentorship_bulk_groups, :mentorship_cycle_id, if_not_exists: true
+    add_index :mentorship_bulk_groups, :token, if_not_exists: true
   end
 end
