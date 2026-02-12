@@ -18,7 +18,7 @@ module Admin
 
       col :mentorship_cycle, search: :select
       col :user
-      col :emai do |registration|
+      col :email do |registration|
         registration.user.email
       end
 
