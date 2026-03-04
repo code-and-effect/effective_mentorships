@@ -96,25 +96,21 @@ module EffectiveMentorshipsRegistration
     scope :mentees, -> { where(mentorship_role: :mentee) }
     scope :opt_in, -> { where(opt_in: true) }
     scope :opt_out, -> { where(opt_in: false) }
+    scope :opt_in_with_groups, -> { opt_in.with_groups }
     scope :opt_in_without_groups, -> { opt_in.without_groups }
 
     scope :in_person, -> { where(venue: 'In-person') }
     scope :virtual, -> { where(venue: 'Virtual') }
     scope :either, -> { where(venue: 'Either') }
 
-    scope :with_groups, -> { 
-      group_users = Effective::MentorshipGroupUser.all
+    scope :with_groups, -> {
+      group_users = Effective::MentorshipGroupUser.where.not(mentorship_registration_id: nil)
       where(id: group_users.select(:mentorship_registration_id))
     }
 
     scope :without_groups, -> {
-      group_users = Effective::MentorshipGroupUser.all
+      group_users = Effective::MentorshipGroupUser.where.not(mentorship_registration_id: nil)
       where.not(id: group_users.select(:mentorship_registration_id))
-    }
-
-    scope :with_groups, -> { 
-      group_users = Effective::MentorshipGroupUser.all
-      where(id: group_users.select(:mentorship_registration_id))
     }
 
     scope :with_groups_from, -> (mentorship_bulk_group) { 
