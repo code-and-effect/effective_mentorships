@@ -11,6 +11,9 @@ module Admin
       col :mentorship_group
       col :mentorship_role
       col :user
+      col :email do |registration|
+        registration.user.email
+      end
 
       actions_col
     end
