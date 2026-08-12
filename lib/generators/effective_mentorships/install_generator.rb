@@ -16,7 +16,7 @@ module EffectiveMentorships
       end
 
       def copy_initializer
-        template ('../' * 3) + 'config/effective_mentorship.rb', 'config/initializers/effective_mentorship.rb'
+        template ('../' * 3) + 'config/effective_mentorships.rb', 'config/initializers/effective_mentorships.rb'
       end
 
       def copy_locale

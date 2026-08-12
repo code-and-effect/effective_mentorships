@@ -16,7 +16,7 @@ EffectiveMentorships.setup do |config|
   # Please see config/initializers/effective_resources.rb for default effective_* gem mailer settings
   #
   # Configure the class responsible to send e-mails.
-  # config.mailer = 'Effective::MentorshipMailer'
+  # config.mailer = 'Effective::MentorshipsMailer'
   #
   # Override effective_resource mailer defaults
   #
