@@ -1,10 +1,7 @@
 EffectiveMentorships.setup do |config|
   # Layout Settings
   # Configure the Layout per controller, or all at once
-  config.layout = {
-    mentorships: 'application',
-    admin: 'admin'
-  }
+  # config.layout = { mentorships: 'application', admin: 'admin' }
 
   # Mentorship Class Settings
   # Configure the class responsible for the mentorships
