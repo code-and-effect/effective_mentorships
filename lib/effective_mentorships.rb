@@ -21,15 +21,15 @@ module EffectiveMentorships
   end
 
   def self.MentorshipBulkGroup
-    mentorship_bulk_group_class_name&.constantize || Effective::MentorshipBulkGroup
+    klass(:mentorship_bulk_group)
   end
 
   def self.MentorshipGroup
-    mentorship_group_class_name&.constantize || Effective::MentorshipGroup
+    klass(:mentorship_group)
   end
 
   def self.MentorshipRegistration
-    mentorship_registration_class_name&.constantize || Effective::MentorshipRegistration
+    klass(:mentorship_registration)
   end
 
   def self.MentorshipCycle
