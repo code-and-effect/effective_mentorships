@@ -13,11 +13,11 @@ module Admin
       col 'user.last_name', visible: false
       col 'user.email', visible: false
 
-      if defined?(EffectiveMemberships)
+      if defined?(EffectiveMemberships) && EffectiveMemberships.Membership
         col(:member_number, label: 'Member #', sort: false, visible: false) do |registration|
         registration.user.try(:membership).try(:number)
         end.search do |collection, term|
-          memberships = Effective::Membership.where(owner_type: current_user.class.name).where('number ILIKE ?', "%#{term}%")
+          memberships = EffectiveMemberships.Membership.where(owner_type: current_user.class.name).where('number ILIKE ?', "%#{term}%")
           collection.where(user_id: memberships.select('owner_id'))
         end
 
@@ -26,7 +26,7 @@ module Admin
             content_tag(:div, membership_category, class: 'col-resource')
           end.join.html_safe
         end.search do |collection, term|
-          memberships = Effective::Membership.where(owner_type: current_user.class.name).with_category(term)
+          memberships = EffectiveMemberships.Membership.where(owner_type: current_user.class.name).with_category(term)
           collection.where(user_id: memberships.select('owner_id'))
         end
 
@@ -35,7 +35,7 @@ module Admin
             content_tag(:div, status, class: 'col-resource')
           end.join.html_safe
         end.search do |collection, term|
-          memberships = Effective::Membership.where(owner_type: current_user.class.name).with_status(term)
+          memberships = EffectiveMemberships.Membership.where(owner_type: current_user.class.name).with_status(term)
           collection.where(user_id: memberships.select('owner_id'))
         end
       end
