@@ -4,6 +4,7 @@ module Admin
       scope :all
       scope :opt_in
       scope :opt_out
+      scope :opt_in_with_groups
       scope :opt_in_without_groups
     end
 
@@ -17,6 +18,9 @@ module Admin
 
       col :mentorship_cycle, search: :select
       col :user
+      col :email do |registration|
+        registration.user.email
+      end
 
       col :opt_in, visible: attributes[:opt_in_without_groups].blank?
 
